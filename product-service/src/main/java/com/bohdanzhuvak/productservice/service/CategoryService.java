@@ -2,9 +2,7 @@ package com.bohdanzhuvak.productservice.service;
 
 import com.bohdanzhuvak.productservice.dto.CategoryCreateDTO;
 import com.bohdanzhuvak.productservice.dto.CategoryDTO;
-import com.bohdanzhuvak.productservice.dto.ProductDTO;
 import com.bohdanzhuvak.productservice.model.Category;
-import com.bohdanzhuvak.productservice.model.Product;
 import com.bohdanzhuvak.productservice.repository.CategoryRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
