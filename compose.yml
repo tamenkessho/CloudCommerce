@@ -1,0 +1,13 @@
+services:
+  product-db:
+    container_name: product-db
+    image: mongo:8.0
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: rootuser
+      MONGO_INITDB_ROOT_PASSWORD: rootpass
+    ports:
+      - '27017:27017'
+    volumes:
+      - product-db-data:/data/db
+volumes:
+  product-db-data:
