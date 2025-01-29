@@ -1,0 +1,13 @@
+spring:
+  application:
+    name: order-service
+  data:
+    mongodb:
+      uri: ${MONGODB_URI}
+      auto-index-creation: true
+
+product-service:
+  url: http://${PRODUCT_SERVICE_HOST:localhost}:8081
+
+server:
+  port: 8082
