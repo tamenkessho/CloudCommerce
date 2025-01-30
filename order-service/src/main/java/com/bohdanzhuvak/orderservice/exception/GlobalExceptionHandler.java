@@ -1,48 +1,50 @@
 package com.bohdanzhuvak.orderservice.exception;
 
+import com.bohdanzhuvak.orderservice.dto.ErrorResponse;
 import feign.FeignException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+
+import java.util.List;
 
 @ControllerAdvice
 @Slf4j
 public class GlobalExceptionHandler {
-  @ExceptionHandler(OrderProcessingException.class)
-  public ResponseEntity<String> handleNotFoundException(OrderProcessingException ex) {
-    log.error(ex.getMessage());
-    return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
-  }
-
-  @ExceptionHandler(OrderNotFoundException.class)
-  public ResponseEntity<String> handleOrderNotFoundException(OrderNotFoundException ex) {
-    return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
+  @ExceptionHandler({OrderNotFoundException.class, ProductNotFoundException.class})
+  public ResponseEntity<ErrorResponse> handleNotFoundException(Exception ex) {
+    return new ResponseEntity<>(new ErrorResponse(ex.getMessage()), HttpStatus.NOT_FOUND);
   }
 
   @ExceptionHandler(IllegalStateException.class)
-  public ResponseEntity<String> handleIllegalStateException(IllegalStateException ex) {
-    return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
+  public ResponseEntity<ErrorResponse> handleIllegalStateException(IllegalStateException ex) {
+    return new ResponseEntity<>(new ErrorResponse(ex.getMessage()), HttpStatus.BAD_REQUEST);
   }
 
-  @ExceptionHandler(ProductNotFoundException.class)
-  public ResponseEntity<String> handleProductNotFoundException(ProductNotFoundException ex) {
-    return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
+  @ExceptionHandler(FeignException.ServiceUnavailable.class)
+  public ResponseEntity<ErrorResponse> handleFeignServiceUnavailable(FeignException ex) {
+    return new ResponseEntity<>(new ErrorResponse("Dependent service is unavailable"), HttpStatus.SERVICE_UNAVAILABLE);
   }
 
-  @ExceptionHandler(FeignException.NotFound.class)
-  public ResponseEntity<String> handleFeignNotFound(FeignException.NotFound ex) {
-    return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
-  }
+  @ExceptionHandler(MethodArgumentNotValidException.class)
+  public ResponseEntity<ErrorResponse> handleValidationExceptions(MethodArgumentNotValidException ex) {
+    List<String> errors = ex.getBindingResult()
+            .getFieldErrors()
+            .stream()
+            .map(error -> error.getField() + ": " + error.getDefaultMessage())
+            .toList();
 
-  @ExceptionHandler(FeignException.class)
-  public ResponseEntity<String> handleFeignServiceUnavailable(FeignException ex) {
-    return new ResponseEntity<>("Dependent service is unavailable", HttpStatus.SERVICE_UNAVAILABLE);
+    return new ResponseEntity<>(
+            new ErrorResponse("Validation failed", errors),
+            HttpStatus.BAD_REQUEST
+    );
   }
 
   @ExceptionHandler(Exception.class)
-  public ResponseEntity<String> handleGenericException(Exception ex) {
-    return new ResponseEntity<>("Internal server error", HttpStatus.INTERNAL_SERVER_ERROR);
+  public ResponseEntity<ErrorResponse> handleGenericException(Exception ex) {
+    return new ResponseEntity<>(new ErrorResponse("Internal server error"), HttpStatus.INTERNAL_SERVER_ERROR);
   }
 }
