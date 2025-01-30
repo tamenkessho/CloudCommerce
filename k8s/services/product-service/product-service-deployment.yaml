@@ -1,0 +1,54 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: product-service
+  namespace: cloud-commerce
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: product-service
+  template:
+    metadata:
+      labels:
+        app: product-service
+    spec:
+      containers:
+        - name: product-service
+          image: niccco/product-service:latest
+          ports:
+            - containerPort: 8081
+          env:
+            - name: MONGODB_URI
+              valueFrom:
+                configMapKeyRef:
+                  name: product-service-config
+                  key: MONGODB_URI
+            - name: ORDER_SERVICE_HOST
+              value: "order-service"
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: product-service
+  namespace: cloud-commerce
+spec:
+  selector:
+    app: product-service
+  ports:
+    - protocol: TCP
+      port: 8081
+      targetPort: 8081
+  type: ClusterIP
+
+---
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: product-service-config
+  namespace: cloud-commerce
+data:
+  MONGODB_URI: "mongodb://rootuser:rootpass@mongodb:27017/product-db?authSource=admin"
