@@ -1,0 +1,21 @@
+server:
+  port: 8083
+
+spring:
+  application:
+    name: user-service
+  data:
+    mongodb:
+      uri: mongodb://${MONGO_USER:admin}:${MONGO_PASSWORD:admin}@${MONGO_HOST:localhost}:27017/user_db?authSource=admin
+      auto-index-creation: true
+
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://localhost:8082
+
+jwt:
+  secret-key: MWZjb2RmZDZqNTZkdWZncmZ3ZmR1ZnNnZGZzZ2ZkZnNnZGRzZw== # Generate with: openssl rand -base64 32
+  access-token-expiration: 3600000 # 1 h
+  refresh-token-expiration: 86400000 # 24 h
