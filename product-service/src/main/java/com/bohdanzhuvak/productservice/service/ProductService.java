@@ -49,8 +49,14 @@ public class ProductService {
             .toList();
   }
 
-  private ProductDTO mapToProductDTO(Product product, Category category) {
-    return ProductDTO.builder()
+  public void deleteProductById(String productId) {
+    if (!productRepository.existsById(productId)) {
+      throw new ProductNotFoundException("Product " + productId + " not found");
+    }
+    productRepository.deleteById(productId);
+    log.info("Product {} is deleted", productId);
+  }
+
   private ProductResponse mapToProductResponse(Product product) {
     return ProductResponse.builder()
             .id(product.getId())

@@ -33,11 +33,16 @@ public class ProductController {
 
   @GetMapping("/{id}")
   @ResponseStatus(HttpStatus.OK)
-  public ProductDTO getProduct(@PathVariable String id) {
-    return productService.getProduct(id);
   public ProductResponse getProduct(@PathVariable String id) {
     log.info("Get /api/products/{}", id);
     return productService.getProductById(id);
+  }
+
+  @DeleteMapping("/{id}")
+  @ResponseStatus(HttpStatus.NO_CONTENT)
+  public void deleteProduct(@PathVariable String id) {
+    log.info("Delete /api/products/{}", id);
+    productService.deleteProductById(id);
   }
 
 }
