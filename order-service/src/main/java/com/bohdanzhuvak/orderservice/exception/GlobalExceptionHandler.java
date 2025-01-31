@@ -15,7 +15,8 @@ import java.util.List;
 @Slf4j
 public class GlobalExceptionHandler {
   @ExceptionHandler({OrderNotFoundException.class, ProductNotFoundException.class})
-  public ResponseEntity<ErrorResponse> handleNotFoundException(Exception ex) {
+  public ResponseEntity<ErrorResponse> handleBusinessExceptions(Exception ex) {
+    log.warn("Business error: {}", ex.getMessage());
     return new ResponseEntity<>(new ErrorResponse(ex.getMessage()), HttpStatus.NOT_FOUND);
   }
 
@@ -37,6 +38,8 @@ public class GlobalExceptionHandler {
             .map(error -> error.getField() + ": " + error.getDefaultMessage())
             .toList();
 
+    log.warn("Validation error: {}", errors);
+
     return new ResponseEntity<>(
             new ErrorResponse("Validation failed", errors),
             HttpStatus.BAD_REQUEST
@@ -45,6 +48,7 @@ public class GlobalExceptionHandler {
 
   @ExceptionHandler(Exception.class)
   public ResponseEntity<ErrorResponse> handleGenericException(Exception ex) {
+    log.error("Internal server error: ", ex);
     return new ResponseEntity<>(new ErrorResponse("Internal server error"), HttpStatus.INTERNAL_SERVER_ERROR);
   }
 }

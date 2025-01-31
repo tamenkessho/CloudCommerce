@@ -13,6 +13,7 @@ import com.bohdanzhuvak.orderservice.model.OrderStatus;
 import com.bohdanzhuvak.orderservice.repository.OrderRepository;
 import feign.FeignException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,6 +23,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class OrderService {
   private final OrderRepository orderRepository;
   private final ProductClient productClient;
@@ -56,17 +58,20 @@ public class OrderService {
             .build();
 
     order = orderRepository.save(order);
+    log.info("Created order with id: {}", order.getId());
     return mapToResponse(order);
   }
 
   public OrderResponse getOrderById(String id) {
     Order order = orderRepository.findById(id)
             .orElseThrow(() -> new OrderNotFoundException("Order not found with id: " + id));
+    log.info("Successfully retrieved order: {}", order.getId());
     return mapToResponse(order);
   }
 
   public List<OrderResponse> getOrdersByUserId(String userId) {
     List<Order> orders = orderRepository.findByUserId(userId);
+    log.info("Retrieved {} orders", orders.size());
     return orders.stream()
             .map(this::mapToResponse)
             .toList();
@@ -83,6 +88,7 @@ public class OrderService {
 
     order.setStatus(OrderStatus.CANCELLED);
     order = orderRepository.save(order);
+    log.info("Canceled order with id: {}", order.getId());
     return mapToResponse(order);
   }
 
