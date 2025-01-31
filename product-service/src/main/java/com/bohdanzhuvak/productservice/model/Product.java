@@ -4,6 +4,7 @@ import lombok.Builder;
 import lombok.Data;
 import org.springframework.data.annotation.Id;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -13,9 +14,9 @@ public class Product {
   @Id
   private String id;
   private String name;
-  private String categoryId;
+  private Category category;
   private String description;
-  private double price;
+  private BigDecimal price;
   private double discount;
   private List<String> images;
   private LocalDateTime createdAt;
