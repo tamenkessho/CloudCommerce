@@ -1,20 +1,34 @@
 package com.bohdanzhuvak.userservice.controller;
 
+import com.bohdanzhuvak.userservice.dto.LoginRequest;
+import com.bohdanzhuvak.userservice.dto.TokenResponse;
+import com.bohdanzhuvak.userservice.dto.UserRequest;
 import com.bohdanzhuvak.userservice.dto.UserResponse;
 import com.bohdanzhuvak.userservice.service.UserService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/users")
+@RequestMapping("/api/auth")
 @RequiredArgsConstructor
-public class UserController {
+public class AuthController {
   private final UserService userService;
+
+  @PostMapping("/register")
+  @ResponseStatus(HttpStatus.CREATED)
+  public UserResponse register(@RequestBody @Valid UserRequest request) {
+    return userService.register(request);
+  }
+
+  @PostMapping("/login")
+  public TokenResponse login(@RequestBody @Valid LoginRequest request) {
+    return userService.login(request);
+  }
 
   @GetMapping("/me")
   @PreAuthorize("hasRole('USER')")
@@ -22,3 +36,4 @@ public class UserController {
     return userService.getUserById(userDetails.getUsername());
   }
 }
+

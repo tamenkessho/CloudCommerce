@@ -9,9 +9,9 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
 import java.util.Date;
-import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @Component
 @RequiredArgsConstructor
@@ -20,16 +20,16 @@ public class JwtTokenProvider {
   private final JwtProperties jwtProperties;
 
   public String generateAccessToken(UserDetails userDetails) {
-    List<String> roles = userDetails.getAuthorities().stream()
+    String roles = userDetails.getAuthorities().stream()
         .map(GrantedAuthority::getAuthority)
-        .toList();
+        .collect(Collectors.joining(","));
     return buildToken(Map.of("roles", roles), userDetails, jwtProperties.getAccessTokenExpiration());
   }
 
   public String generateRefreshToken(UserDetails userDetails) {
-    List<String> roles = userDetails.getAuthorities().stream()
+    String roles = userDetails.getAuthorities().stream()
         .map(GrantedAuthority::getAuthority)
-        .toList();
+        .collect(Collectors.joining(","));
 
     return buildToken(Map.of("roles", roles), userDetails, jwtProperties.getRefreshTokenExpiration());
   }
