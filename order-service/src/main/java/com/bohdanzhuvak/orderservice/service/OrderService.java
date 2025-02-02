@@ -1,12 +1,12 @@
 package com.bohdanzhuvak.orderservice.service;
 
+import com.bohdanzhuvak.commonexceptions.OrderNotFoundException;
+import com.bohdanzhuvak.commonexceptions.ProductNotFoundException;
 import com.bohdanzhuvak.orderservice.client.ProductClient;
 import com.bohdanzhuvak.orderservice.dto.OrderItemResponse;
 import com.bohdanzhuvak.orderservice.dto.OrderRequest;
 import com.bohdanzhuvak.orderservice.dto.OrderResponse;
 import com.bohdanzhuvak.orderservice.dto.ProductResponse;
-import com.bohdanzhuvak.orderservice.exception.OrderNotFoundException;
-import com.bohdanzhuvak.orderservice.exception.ProductNotFoundException;
 import com.bohdanzhuvak.orderservice.model.Order;
 import com.bohdanzhuvak.orderservice.model.OrderItem;
 import com.bohdanzhuvak.orderservice.model.OrderStatus;

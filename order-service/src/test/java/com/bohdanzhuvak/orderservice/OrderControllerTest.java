@@ -1,15 +1,17 @@
 package com.bohdanzhuvak.orderservice;
 
+import com.bohdanzhuvak.commonexceptions.GlobalExceptionHandler;
+import com.bohdanzhuvak.commonexceptions.OrderNotFoundException;
+import com.bohdanzhuvak.commonsecurity.SecurityConfig;
 import com.bohdanzhuvak.orderservice.controller.OrderController;
 import com.bohdanzhuvak.orderservice.dto.OrderResponse;
-import com.bohdanzhuvak.orderservice.exception.OrderNotFoundException;
 import com.bohdanzhuvak.orderservice.service.OrderService;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
@@ -21,7 +23,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(OrderController.class)
-@AutoConfigureMockMvc(addFilters = false)
+@Import({GlobalExceptionHandler.class, SecurityConfig.class})
 class OrderControllerTest {
 
   @Autowired
