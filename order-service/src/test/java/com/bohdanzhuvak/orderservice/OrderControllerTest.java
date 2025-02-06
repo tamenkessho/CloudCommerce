@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -24,6 +25,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @WebMvcTest(OrderController.class)
 @Import({GlobalExceptionHandler.class, SecurityConfig.class})
+@WithMockUser("user1")
 class OrderControllerTest {
 
   @Autowired
@@ -40,7 +42,6 @@ class OrderControllerTest {
   void createOrder_ShouldReturnCreatedOrder() throws Exception {
     String requestJson = """
             {
-                "userId": "user1",
                 "items": [
                     {
                         "productId": "prod1",
@@ -83,7 +84,6 @@ class OrderControllerTest {
   void createOrder_ShouldReturn400ForInvalidRequest() throws Exception {
     String invalidRequestJson = """
             {
-                "userId": "",
                 "items": []
             }
             """;
@@ -92,7 +92,6 @@ class OrderControllerTest {
             {
                 "message": "Validation failed",
                 "errors": [
-                    "userId: User ID is required",
                     "items: Order items cannot be empty"
                 ]
             }

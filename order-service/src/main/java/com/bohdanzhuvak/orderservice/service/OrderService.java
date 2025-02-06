@@ -2,6 +2,7 @@ package com.bohdanzhuvak.orderservice.service;
 
 import com.bohdanzhuvak.commonexceptions.OrderNotFoundException;
 import com.bohdanzhuvak.commonexceptions.ProductNotFoundException;
+import com.bohdanzhuvak.commonsecurity.SecurityUtils;
 import com.bohdanzhuvak.orderservice.client.ProductClient;
 import com.bohdanzhuvak.orderservice.dto.OrderItemResponse;
 import com.bohdanzhuvak.orderservice.dto.OrderRequest;
@@ -14,6 +15,7 @@ import com.bohdanzhuvak.orderservice.repository.OrderRepository;
 import feign.FeignException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -27,8 +29,10 @@ import java.util.List;
 public class OrderService {
   private final OrderRepository orderRepository;
   private final ProductClient productClient;
+  private final SecurityUtils securityUtils;
 
   @Transactional
+  @PreAuthorize("hasRole('USER')")
   public OrderResponse createOrder(OrderRequest request) {
     List<OrderItem> orderItems = request.items().stream()
             .map(item -> {
@@ -49,8 +53,10 @@ public class OrderService {
             .map(item -> item.getPricePerUnit().multiply(BigDecimal.valueOf(item.getQuantity())))
             .reduce(BigDecimal.ZERO, BigDecimal::add);
 
+    String userId = securityUtils.getCurrentUserId();
+
     Order order = Order.builder()
-            .userId(request.userId())
+            .userId(userId)
             .status(OrderStatus.CREATED)
             .totalPrice(totalPrice)
             .items(orderItems)
@@ -62,13 +68,18 @@ public class OrderService {
     return mapToResponse(order);
   }
 
+  @PreAuthorize("hasRole('USER')")
   public OrderResponse getOrderById(String id) {
     Order order = orderRepository.findById(id)
             .orElseThrow(() -> new OrderNotFoundException("Order not found with id: " + id));
+
+    securityUtils.checkAccessToUserData(order.getUserId());
+
     log.info("Successfully retrieved order: {}", order.getId());
     return mapToResponse(order);
   }
 
+  @PreAuthorize("#userId == authentication.name or hasRole('ADMIN')")
   public List<OrderResponse> getOrdersByUserId(String userId) {
     List<Order> orders = orderRepository.findByUserId(userId);
     log.info("Retrieved {} orders", orders.size());
@@ -78,9 +89,12 @@ public class OrderService {
   }
 
   @Transactional
+  @PreAuthorize("hasRole('USER')")
   public OrderResponse cancelOrder(String id) {
     Order order = orderRepository.findById(id)
             .orElseThrow(() -> new OrderNotFoundException("Order not found with id: " + id));
+
+    securityUtils.checkAccessToUserData(order.getUserId());
 
     if (order.getStatus() != OrderStatus.CREATED) {
       throw new IllegalStateException("Cannot cancel order in status: " + order.getStatus());

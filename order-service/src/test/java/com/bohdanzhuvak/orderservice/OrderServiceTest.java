@@ -2,6 +2,7 @@ package com.bohdanzhuvak.orderservice;
 
 import com.bohdanzhuvak.commonexceptions.OrderNotFoundException;
 import com.bohdanzhuvak.commonexceptions.ProductNotFoundException;
+import com.bohdanzhuvak.commonsecurity.SecurityUtils;
 import com.bohdanzhuvak.orderservice.client.ProductClient;
 import com.bohdanzhuvak.orderservice.dto.OrderItemRequest;
 import com.bohdanzhuvak.orderservice.dto.OrderRequest;
@@ -36,7 +37,10 @@ class OrderServiceTest {
 
   @Mock
   private OrderRepository orderRepository;
-  @Mock private ProductClient productClient;
+  @Mock
+  private ProductClient productClient;
+  @Mock
+  private SecurityUtils securityUtils;
   @InjectMocks
   private OrderService orderService;
 
@@ -44,7 +48,7 @@ class OrderServiceTest {
   void createOrder_ShouldSaveOrderWithCorrectData() {
     // Arrange
     OrderItemRequest itemRequest = new OrderItemRequest("prod1", 2);
-    OrderRequest request = new OrderRequest("user1", List.of(itemRequest));
+    OrderRequest request = new OrderRequest(List.of(itemRequest));
 
     ProductResponse productResponse = new ProductResponse(
             "prod1", "Product 1", new BigDecimal("100.00")
@@ -52,6 +56,7 @@ class OrderServiceTest {
 
     when(productClient.getProductById("prod1")).thenReturn(productResponse);
     when(orderRepository.save(any(Order.class))).thenAnswer(inv -> inv.getArgument(0));
+    when(securityUtils.getCurrentUserId()).thenReturn("user1");
 
     // Act
     OrderResponse response = orderService.createOrder(request);
@@ -68,7 +73,7 @@ class OrderServiceTest {
   void createOrder_ShouldThrowWhenProductNotFound() {
     // Arrange
     OrderItemRequest itemRequest = new OrderItemRequest("invalid", 1);
-    OrderRequest request = new OrderRequest("user1", List.of(itemRequest));
+    OrderRequest request = new OrderRequest(List.of(itemRequest));
 
     when(productClient.getProductById("invalid"))
             .thenThrow(new FeignException.NotFound("", Request.create(
@@ -100,10 +105,11 @@ class OrderServiceTest {
     when(productClient.getProductById("prod2"))
             .thenReturn(new ProductResponse("prod2", "P2", new BigDecimal("100.00")));
     when(orderRepository.save(any())).thenAnswer(inv -> inv.getArgument(0));
+    when(securityUtils.getCurrentUserId()).thenReturn("user1");
 
     // Act
     OrderResponse response = orderService.createOrder(
-            new OrderRequest("user1", items)
+            new OrderRequest(items)
     );
 
     // Assert

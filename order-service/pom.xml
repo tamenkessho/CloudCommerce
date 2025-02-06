@@ -49,6 +49,10 @@
             <scope>test</scope>
         </dependency>
         <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-test</artifactId>
+        </dependency>
+        <dependency>
             <groupId>com.bohdanzhuvak</groupId>
             <artifactId>common-exceptions</artifactId>
             <version>0.0.1-SNAPSHOT</version>
