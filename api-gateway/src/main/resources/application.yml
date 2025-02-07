@@ -7,3 +7,18 @@ spring:
 
 jwt:
   secret-key: MWZjb2RmZDZqNTZkdWZncmZ3ZmR1ZnNnZGZzZ2ZkZnNnZGRzZw==
+
+springdoc:
+  api-docs:
+    enabled: true
+  swagger-ui:
+    enabled: true
+    path: /swagger-ui.html
+    config-url: /v3/api-docs/swagger-config
+    urls:
+      - url: http://localhost:8082/v3/api-docs
+        name: Order Service
+      - url: http://localhost:8081/v3/api-docs
+        name: Product Service
+      - url: http://localhost:8083/v3/api-docs
+        name: User Service
