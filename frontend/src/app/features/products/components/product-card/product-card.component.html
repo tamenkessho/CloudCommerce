@@ -1,0 +1,6 @@
+<div class="product-card">
+<!--  <img [src]="product.imageUrl" [alt]="product.name" class="product-image" />-->
+  <h3>{{ product.name }}</h3>
+  <p>{{ product.price | currency }}</p>
+  <button (click)="viewDetails()">Read more</button>
+</div>
