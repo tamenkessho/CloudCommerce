@@ -4,6 +4,16 @@ server:
 spring:
   application:
     name: api-gateway
+  cloud:
+    gateway:
+      globalcors:
+        cors-configurations:
+          '[/**]':
+            allowedOrigins:
+              - "http://localhost:4200"
+              - "http://localhost:8080"
+            allowedMethods: "GET, POST, PUT, DELETE, OPTIONS"
+            allowedHeaders: "*"
 
 jwt:
   secret-key: MWZjb2RmZDZqNTZkdWZncmZ3ZmR1ZnNnZGZzZ2ZkZnNnZGRzZw==
@@ -16,9 +26,9 @@ springdoc:
     path: /swagger-ui.html
     config-url: /v3/api-docs/swagger-config
     urls:
-      - url: http://localhost:8082/v3/api-docs
+      - url: http://localhost:8080/api/order-service/v3/api-docs
         name: Order Service
-      - url: http://localhost:8081/v3/api-docs
+      - url: http://localhost:8080/api/product-service/v3/api-docs
         name: Product Service
-      - url: http://localhost:8083/v3/api-docs
+      - url: http://localhost:8080/api/user-service/v3/api-docs
         name: User Service

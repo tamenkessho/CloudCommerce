@@ -26,6 +26,17 @@ public class GatewayConfig {
             .filters(f -> f.filter(jwtAuthFilter))
             .uri("http://localhost:8081"))
 
+        .route("product-service-swagger", r -> r.path("/api/product-service/v3/api-docs")
+            .filters(f -> f.rewritePath("/api/product-service/v3/api-docs", "/v3/api-docs"))
+            .uri("http://localhost:8081"))
+
+        .route("order-service-swagger", r -> r.path("/api/order-service/v3/api-docs")
+            .filters(f -> f.rewritePath("/api/order-service/v3/api-docs", "/v3/api-docs"))
+            .uri("http://localhost:8082"))
+
+        .route("user-service-swagger", r -> r.path("/api/user-service/v3/api-docs")
+            .filters(f -> f.rewritePath("/api/user-service/v3/api-docs", "/v3/api-docs"))
+            .uri("http://localhost:8083"))
         .build();
   }
 }
