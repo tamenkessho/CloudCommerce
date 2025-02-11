@@ -1,0 +1,13 @@
+@if (isAuthenticated$ | async) {
+  <button
+    (click)="logout()"
+  >
+    Logout
+  </button>
+} @else {
+  <button
+    (click)="navigateToLogin()"
+  >
+    Login
+  </button>
+}

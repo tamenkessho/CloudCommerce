@@ -1,0 +1,9 @@
+<p>Authorize</p>
+<router-outlet/>
+@if ((currentRoute) === '/auth/login') {
+  <a routerLink="/auth/register">Register</a>
+}
+
+@if ((currentRoute) === '/auth/register') {
+  <a routerLink="/auth/login">Login</a>
+}
