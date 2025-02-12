@@ -1,8 +1,6 @@
 package com.bohdanzhuvak.orderservice;
 
-import com.bohdanzhuvak.commonexceptions.GlobalExceptionHandler;
-import com.bohdanzhuvak.commonexceptions.OrderNotFoundException;
-import com.bohdanzhuvak.commonsecurity.DefaultSecurityConfig;
+import com.bohdanzhuvak.commonexceptions.exception.OrderNotFoundException;
 import com.bohdanzhuvak.orderservice.controller.OrderController;
 import com.bohdanzhuvak.orderservice.dto.OrderResponse;
 import com.bohdanzhuvak.orderservice.service.OrderService;
@@ -11,7 +9,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.context.annotation.Import;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
@@ -24,7 +22,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(OrderController.class)
-@Import({GlobalExceptionHandler.class, DefaultSecurityConfig.class})
+@ComponentScan(basePackages = {"com.bohdanzhuvak.commonexceptions", "com.bohdanzhuvak.commonsecurity"})
 @WithMockUser("user1")
 class OrderControllerTest {
 

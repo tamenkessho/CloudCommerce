@@ -1,4 +1,4 @@
-package com.bohdanzhuvak.apigateway;
+package com.bohdanzhuvak.apigateway.config;
 
 import io.jsonwebtoken.security.Keys;
 import lombok.Data;

@@ -1,6 +1,6 @@
 package com.bohdanzhuvak.productservice.service;
 
-import com.bohdanzhuvak.commonexceptions.ProductNotFoundException;
+import com.bohdanzhuvak.commonexceptions.exception.ProductNotFoundException;
 import com.bohdanzhuvak.productservice.dto.ProductRequest;
 import com.bohdanzhuvak.productservice.dto.ProductResponse;
 import com.bohdanzhuvak.productservice.model.Category;

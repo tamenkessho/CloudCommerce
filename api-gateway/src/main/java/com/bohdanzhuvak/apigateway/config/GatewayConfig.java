@@ -1,5 +1,6 @@
-package com.bohdanzhuvak.apigateway;
+package com.bohdanzhuvak.apigateway.config;
 
+import com.bohdanzhuvak.apigateway.security.JwtAuthenticationFilter;
 import org.springframework.cloud.gateway.route.RouteLocator;
 import org.springframework.cloud.gateway.route.builder.RouteLocatorBuilder;
 import org.springframework.context.annotation.Bean;

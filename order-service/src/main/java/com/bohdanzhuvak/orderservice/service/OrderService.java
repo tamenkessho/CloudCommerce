@@ -1,8 +1,8 @@
 package com.bohdanzhuvak.orderservice.service;
 
-import com.bohdanzhuvak.commonexceptions.OrderNotFoundException;
-import com.bohdanzhuvak.commonexceptions.ProductNotFoundException;
-import com.bohdanzhuvak.commonsecurity.SecurityUtils;
+import com.bohdanzhuvak.commonexceptions.exception.OrderNotFoundException;
+import com.bohdanzhuvak.commonexceptions.exception.ProductNotFoundException;
+import com.bohdanzhuvak.commonsecurity.utils.SecurityUtils;
 import com.bohdanzhuvak.orderservice.client.ProductClient;
 import com.bohdanzhuvak.orderservice.dto.OrderItemResponse;
 import com.bohdanzhuvak.orderservice.dto.OrderRequest;

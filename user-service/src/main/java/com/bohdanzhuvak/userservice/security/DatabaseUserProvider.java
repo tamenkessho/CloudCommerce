@@ -1,7 +1,7 @@
 package com.bohdanzhuvak.userservice.security;
 
-import com.bohdanzhuvak.commonsecurity.UserHeaderContext;
-import com.bohdanzhuvak.commonsecurity.UserProvider;
+import com.bohdanzhuvak.commonsecurity.dto.UserHeaderContext;
+import com.bohdanzhuvak.commonsecurity.provider.UserProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;

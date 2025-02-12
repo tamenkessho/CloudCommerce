@@ -1,5 +1,7 @@
-package com.bohdanzhuvak.commonsecurity;
+package com.bohdanzhuvak.commonsecurity.provider;
 
+import com.bohdanzhuvak.commonsecurity.dto.UserHeaderContext;
+import com.bohdanzhuvak.commonsecurity.model.Role;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;

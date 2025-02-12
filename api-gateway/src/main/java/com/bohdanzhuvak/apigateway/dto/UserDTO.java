@@ -1,4 +1,4 @@
-package com.bohdanzhuvak.apigateway;
+package com.bohdanzhuvak.apigateway.dto;
 
 public record UserDTO(
   String userId,

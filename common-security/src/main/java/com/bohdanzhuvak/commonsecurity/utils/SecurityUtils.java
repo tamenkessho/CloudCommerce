@@ -1,5 +1,6 @@
-package com.bohdanzhuvak.commonsecurity;
+package com.bohdanzhuvak.commonsecurity.utils;
 
+import com.bohdanzhuvak.commonsecurity.model.Role;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;

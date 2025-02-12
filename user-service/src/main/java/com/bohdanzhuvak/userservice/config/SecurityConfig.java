@@ -1,6 +1,6 @@
 package com.bohdanzhuvak.userservice.config;
 
-import com.bohdanzhuvak.commonsecurity.UserProvider;
+import com.bohdanzhuvak.commonsecurity.provider.UserProvider;
 import com.bohdanzhuvak.userservice.security.DatabaseUserProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;

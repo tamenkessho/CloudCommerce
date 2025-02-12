@@ -1,5 +1,7 @@
-package com.bohdanzhuvak.apigateway;
+package com.bohdanzhuvak.apigateway.security;
 
+import com.bohdanzhuvak.apigateway.config.JwtProperties;
+import com.bohdanzhuvak.apigateway.dto.UserDTO;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import lombok.RequiredArgsConstructor;

@@ -1,4 +1,4 @@
-package com.bohdanzhuvak.commonexceptions;
+package com.bohdanzhuvak.commonexceptions.model;
 
 import java.time.Instant;
 import java.util.List;

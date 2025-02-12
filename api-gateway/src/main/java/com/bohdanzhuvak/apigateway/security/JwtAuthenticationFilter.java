@@ -1,5 +1,6 @@
-package com.bohdanzhuvak.apigateway;
+package com.bohdanzhuvak.apigateway.security;
 
+import com.bohdanzhuvak.apigateway.dto.UserDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cloud.gateway.filter.GatewayFilter;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;

@@ -1,4 +1,4 @@
-package com.bohdanzhuvak.commonsecurity;
+package com.bohdanzhuvak.commonsecurity.model;
 
 public enum Role {
   ROLE_USER,

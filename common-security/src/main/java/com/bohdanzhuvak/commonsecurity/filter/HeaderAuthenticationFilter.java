@@ -1,5 +1,7 @@
-package com.bohdanzhuvak.commonsecurity;
+package com.bohdanzhuvak.commonsecurity.filter;
 
+import com.bohdanzhuvak.commonsecurity.dto.UserHeaderContext;
+import com.bohdanzhuvak.commonsecurity.provider.UserProvider;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

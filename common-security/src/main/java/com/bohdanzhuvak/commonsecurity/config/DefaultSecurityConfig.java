@@ -1,5 +1,6 @@
-package com.bohdanzhuvak.commonsecurity;
+package com.bohdanzhuvak.commonsecurity.config;
 
+import com.bohdanzhuvak.commonsecurity.filter.HeaderAuthenticationFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

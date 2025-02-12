@@ -1,5 +1,8 @@
-package com.bohdanzhuvak.commonexceptions;
+package com.bohdanzhuvak.commonexceptions.handler;
 
+import com.bohdanzhuvak.commonexceptions.exception.OrderNotFoundException;
+import com.bohdanzhuvak.commonexceptions.exception.ProductNotFoundException;
+import com.bohdanzhuvak.commonexceptions.model.ErrorResponse;
 import feign.FeignException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
