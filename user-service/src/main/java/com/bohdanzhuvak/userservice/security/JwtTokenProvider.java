@@ -1,7 +1,6 @@
 package com.bohdanzhuvak.userservice.security;
 
 import com.bohdanzhuvak.userservice.config.JwtProperties;
-import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
@@ -10,7 +9,6 @@ import org.springframework.stereotype.Component;
 
 import java.util.Date;
 import java.util.Map;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @Component
@@ -46,27 +44,6 @@ public class JwtTokenProvider {
         .expiration(new Date(System.currentTimeMillis() + expiration))
         .signWith(jwtProperties.getSecretKey())
         .compact();
-  }
-
-  public boolean validateToken(String token) {
-    return !extractClaim(token, Claims::getExpiration).before(new Date());
-  }
-
-  public String getUserIdFromToken(String token) {
-    return extractClaim(token, Claims::getSubject);
-  }
-
-  public <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
-    final Claims claims = extractAllClaims(token);
-    return claimsResolver.apply(claims);
-  }
-
-  private Claims extractAllClaims(String token) {
-    return Jwts.parser()
-        .verifyWith(jwtProperties.getSecretKey())
-        .build()
-        .parseSignedClaims(token)
-        .getPayload();
   }
 
 }

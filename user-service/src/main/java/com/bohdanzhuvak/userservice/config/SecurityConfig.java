@@ -1,20 +1,15 @@
 package com.bohdanzhuvak.userservice.config;
 
-import com.bohdanzhuvak.userservice.security.JwtAuthenticationFilter;
-import com.bohdanzhuvak.userservice.security.JwtTokenProvider;
-import com.bohdanzhuvak.userservice.service.CustomUserDetailsService;
+import com.bohdanzhuvak.commonsecurity.UserProvider;
+import com.bohdanzhuvak.userservice.security.DatabaseUserProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
-import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
-import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
 @EnableWebSecurity
@@ -22,25 +17,11 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @RequiredArgsConstructor
 public class SecurityConfig {
 
-  private final CustomUserDetailsService customUserDetailsService;
-  private final JwtTokenProvider jwtTokenProvider;
+  private final UserDetailsService userDetailsService;
 
   @Bean
-  public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-    http.csrf(AbstractHttpConfigurer::disable)
-        .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/api/auth/register", "/api/auth/login", "/v3/api-docs").permitAll()
-                .anyRequest().authenticated()
-            )
-        .sessionManagement(session -> session
-                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-        )
-        .addFilterBefore(
-            new JwtAuthenticationFilter(jwtTokenProvider, customUserDetailsService),
-            UsernamePasswordAuthenticationFilter.class
-        );
-
-    return http.build();
+  public UserProvider userProvider() {
+    return new DatabaseUserProvider(userDetailsService);
   }
 
   @Bean

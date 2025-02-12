@@ -18,7 +18,8 @@ import static org.springframework.security.config.http.SessionCreationPolicy.STA
 @EnableMethodSecurity
 @EnableWebSecurity
 @RequiredArgsConstructor
-public class SecurityConfig {
+public class DefaultSecurityConfig {
+  private final HeaderAuthenticationFilter headerAuthenticationFilter;
   @Bean
   public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
     return http
@@ -27,7 +28,7 @@ public class SecurityConfig {
             .anyRequest().permitAll()
         )
         .sessionManagement(session -> session.sessionCreationPolicy(STATELESS))
-        .addFilterBefore(new HeaderAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)
+        .addFilterBefore(headerAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
         .build();
   }
 

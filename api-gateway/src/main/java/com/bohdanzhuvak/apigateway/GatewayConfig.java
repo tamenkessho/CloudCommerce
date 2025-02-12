@@ -11,11 +11,12 @@ public class GatewayConfig {
   @Bean
   public RouteLocator customRouteLocator(RouteLocatorBuilder builder, JwtAuthenticationFilter jwtAuthFilter) {
     return builder.routes()
-        .route("user-service-with-filter", r -> r.path("/api/users/**")
+        .route("user-service", r -> r.path("/api/users/**")
             .filters(f -> f.filter(jwtAuthFilter))
             .uri("http://localhost:8083"))
 
-        .route("user-service-no-filter", r -> r.path("/api/auth/**")
+        .route("user-service-auth", r -> r.path("/api/auth/**")
+            .filters(f -> f.filter(jwtAuthFilter))
             .uri("http://localhost:8083"))
 
         .route("order-service", r -> r.path("/api/orders/**")

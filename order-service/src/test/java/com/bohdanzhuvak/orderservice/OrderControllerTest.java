@@ -2,7 +2,7 @@ package com.bohdanzhuvak.orderservice;
 
 import com.bohdanzhuvak.commonexceptions.GlobalExceptionHandler;
 import com.bohdanzhuvak.commonexceptions.OrderNotFoundException;
-import com.bohdanzhuvak.commonsecurity.SecurityConfig;
+import com.bohdanzhuvak.commonsecurity.DefaultSecurityConfig;
 import com.bohdanzhuvak.orderservice.controller.OrderController;
 import com.bohdanzhuvak.orderservice.dto.OrderResponse;
 import com.bohdanzhuvak.orderservice.service.OrderService;
@@ -24,7 +24,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(OrderController.class)
-@Import({GlobalExceptionHandler.class, SecurityConfig.class})
+@Import({GlobalExceptionHandler.class, DefaultSecurityConfig.class})
 @WithMockUser("user1")
 class OrderControllerTest {
 
