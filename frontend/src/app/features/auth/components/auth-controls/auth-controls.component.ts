@@ -16,7 +16,7 @@ export class AuthControlsComponent {
   isAuthenticated$: Observable<boolean>;
 
   constructor(private authService: AuthService, private router: Router) {
-    this.isAuthenticated$ = authService.getAuthStatus()
+    this.isAuthenticated$ = authService.isAuthenticated$
   }
 
   logout(): void {

@@ -7,6 +7,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 
 import javax.crypto.SecretKey;
+import java.time.Duration;
 import java.util.Base64;
 
 @Configuration
@@ -17,10 +18,10 @@ public class JwtProperties {
   private String secretKey;
 
   @Value("${jwt.access-token-expiration}")
-  private long accessTokenExpiration;
+  private Duration accessTokenExpiration;
 
   @Value("${jwt.refresh-token-expiration}")
-  private long refreshTokenExpiration;
+  private Duration refreshTokenExpiration;
 
   public SecretKey getSecretKey() {
     byte[] keyBytes = Base64.getDecoder().decode(secretKey);

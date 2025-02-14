@@ -12,6 +12,7 @@ spring:
             allowedOrigins:
               - "http://localhost:4200"
               - "http://localhost:8080"
+            allow-credentials: true
             allowedMethods: "GET, POST, PUT, DELETE, OPTIONS"
             allowedHeaders: "*"
 
