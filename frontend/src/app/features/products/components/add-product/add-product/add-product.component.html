@@ -1,0 +1,7 @@
+<form [formGroup]="addProductForm" (ngSubmit)="onSubmit()">
+  <input formControlName="name" placeholder="Enter the name">
+  <input formControlName="categoryId" placeholder="Enter the category">
+  <input formControlName="description">
+  <input formControlName="price">
+  <button type="submit" [disabled]="!addProductForm.valid">Add Product</button>
+</form>
