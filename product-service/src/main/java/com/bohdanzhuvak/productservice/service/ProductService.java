@@ -9,9 +9,11 @@ import com.bohdanzhuvak.productservice.repository.CategoryRepository;
 import com.bohdanzhuvak.productservice.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -41,12 +43,11 @@ public class ProductService {
     return productResponse;
   }
 
-  public List<ProductResponse> getAllProducts() {
-    List<Product> products = productRepository.findAll();
-    log.info("Retrieved {} products", products.size());
-    return products.stream()
-            .map(this::mapToProductResponse)
-            .toList();
+  public Page<ProductResponse> getProducts(Pageable pageable, Map<String, String> filterParams) {
+    Page<ProductResponse> productResponses = productRepository.findProductsByFilters(filterParams, pageable)
+        .map(this::mapToProductResponse);
+    log.info("List of {} products filtered by {} is found", productResponses.getTotalElements(), filterParams);
+    return productResponses;
   }
 
   public void deleteProductById(String productId) {
