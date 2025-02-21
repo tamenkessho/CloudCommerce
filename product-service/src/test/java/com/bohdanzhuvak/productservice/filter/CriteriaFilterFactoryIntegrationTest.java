@@ -33,8 +33,8 @@ class CriteriaFilterFactoryIntegrationTest {
     assertThat(result)
         .hasSize(2)
         .contains(
-            Criteria.where("price").lte(new BigDecimal("1000")),
-            Criteria.where("category").is("electronics")
+            Criteria.where("price").lte(new BigDecimal("1000").doubleValue()),
+            Criteria.where("category.name").is("electronics")
         );
   }
 }

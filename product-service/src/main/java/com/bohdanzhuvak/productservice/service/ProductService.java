@@ -3,6 +3,7 @@ package com.bohdanzhuvak.productservice.service;
 import com.bohdanzhuvak.commonexceptions.exception.ProductNotFoundException;
 import com.bohdanzhuvak.productservice.dto.ProductRequest;
 import com.bohdanzhuvak.productservice.dto.ProductResponse;
+import com.bohdanzhuvak.productservice.mapper.ProductMapper;
 import com.bohdanzhuvak.productservice.model.Category;
 import com.bohdanzhuvak.productservice.model.Product;
 import com.bohdanzhuvak.productservice.repository.CategoryRepository;
@@ -21,33 +22,41 @@ import java.util.Map;
 public class ProductService {
   private final ProductRepository productRepository;
   private final CategoryRepository categoryRepository;
+  private final ProductMapper productMapper;
 
   public ProductResponse createProduct(ProductRequest productRequest) {
-    Category category = categoryRepository.findById(productRequest.categoryId()).orElseThrow(() -> new ProductNotFoundException("Category " + productRequest.categoryId() + " not found"));
-    Product product = Product.builder()
-            .name(productRequest.name())
-            .description(productRequest.description())
-            .category(category)
-            .price(productRequest.price())
-            .build();
-
+    Category category = categoryRepository.findById(productRequest.categoryId())
+        .orElseThrow(() -> new ProductNotFoundException("Category " + productRequest.categoryId() + " not found"));
+    Product product = productMapper.toProduct(productRequest, category);
     product = productRepository.save(product);
     log.info("Product {} is saved", product.getId());
-    return mapToProductResponse(product);
+    return productMapper.toProductResponse(product);
   }
 
   public ProductResponse getProductById(String productId) {
-    ProductResponse productResponse = productRepository.findById(productId).map(this::mapToProductResponse)
-            .orElseThrow(() -> new ProductNotFoundException("Product " + productId + " not found"));
+    ProductResponse productResponse = productRepository.findById(productId)
+        .map(productMapper::toProductResponse)
+        .orElseThrow(() -> new ProductNotFoundException("Product " + productId + " not found"));
     log.info("Product {} is found", productId);
     return productResponse;
   }
 
   public Page<ProductResponse> getProducts(Pageable pageable, Map<String, String> filterParams) {
     Page<ProductResponse> productResponses = productRepository.findProductsByFilters(filterParams, pageable)
-        .map(this::mapToProductResponse);
+        .map(productMapper::toProductResponse);
     log.info("List of {} products filtered by {} is found", productResponses.getTotalElements(), filterParams);
     return productResponses;
+  }
+
+  public ProductResponse updateProductById(String id, ProductRequest productRequest) {
+    return productRepository.findById(id)
+        .map(existingProduct -> {
+          productMapper.updateProductFromRequest(productRequest, existingProduct);
+          log.info("Product {} is updated", id);
+          return productRepository.save(existingProduct);
+        })
+        .map(productMapper::toProductResponse)
+        .orElseThrow(() -> new ProductNotFoundException("Product " + id + " not found"));
   }
 
   public void deleteProductById(String productId) {
@@ -56,15 +65,5 @@ public class ProductService {
     }
     productRepository.deleteById(productId);
     log.info("Product {} is deleted", productId);
-  }
-
-  private ProductResponse mapToProductResponse(Product product) {
-    return ProductResponse.builder()
-            .id(product.getId())
-            .name(product.getName())
-            .category(product.getCategory().getName())
-            .description(product.getDescription())
-            .price(product.getPrice())
-            .build();
   }
 }

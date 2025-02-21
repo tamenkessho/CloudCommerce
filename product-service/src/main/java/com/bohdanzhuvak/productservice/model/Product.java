@@ -2,11 +2,16 @@ package com.bohdanzhuvak.productservice.model;
 
 import lombok.Builder;
 import lombok.Data;
+import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.mongodb.core.mapping.Field;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
+
+import static org.springframework.data.mongodb.core.mapping.FieldType.DOUBLE;
 
 @Data
 @Builder
@@ -16,9 +21,12 @@ public class Product {
   private String name;
   private Category category;
   private String description;
+  @Field(targetType = DOUBLE)
   private BigDecimal price;
   private double discount;
   private List<String> images;
+  @CreatedDate
   private LocalDateTime createdAt;
+  @LastModifiedDate
   private LocalDateTime updatedAt;
 }
