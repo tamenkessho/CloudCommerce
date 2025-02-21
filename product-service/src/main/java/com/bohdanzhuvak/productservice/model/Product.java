@@ -14,7 +14,7 @@ import java.util.List;
 import static org.springframework.data.mongodb.core.mapping.FieldType.DOUBLE;
 
 @Data
-@Builder
+@Builder(toBuilder = true)
 public class Product {
   @Id
   private String id;

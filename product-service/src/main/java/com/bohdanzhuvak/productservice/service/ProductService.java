@@ -50,10 +50,11 @@ public class ProductService {
 
   public ProductResponse updateProductById(String id, ProductRequest productRequest) {
     return productRepository.findById(id)
-        .map(existingProduct -> {
-          productMapper.updateProductFromRequest(productRequest, existingProduct);
+        .map(existingProduct -> productMapper.updateProductWithoutMutation(productRequest, existingProduct))
+        .map(productRepository::save)
+        .map(savedProduct -> {
           log.info("Product {} is updated", id);
-          return productRepository.save(existingProduct);
+          return savedProduct;
         })
         .map(productMapper::toProductResponse)
         .orElseThrow(() -> new ProductNotFoundException("Product " + id + " not found"));
