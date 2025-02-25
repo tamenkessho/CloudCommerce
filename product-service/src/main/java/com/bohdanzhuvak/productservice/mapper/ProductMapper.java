@@ -20,12 +20,12 @@ public interface ProductMapper {
   @Mapping(target = "id", ignore = true)
   @Mapping(target = "createdAt", ignore = true)
   @Mapping(target = "category", ignore = true)
-  void updateProduct(ProductRequest productRequest, @MappingTarget Product existingProduct);
+  void applyRequestToProduct(ProductRequest productRequest, @MappingTarget Product existingProduct);
 
 
-  default Product updateProductWithoutMutation(ProductRequest productRequest, Product product){
+  default Product copyRequestToProduct(ProductRequest productRequest, Product product){
     Product copy = product.toBuilder().build();
-    updateProduct(productRequest, copy);
+    applyRequestToProduct(productRequest, copy);
     return copy;
   }
 
