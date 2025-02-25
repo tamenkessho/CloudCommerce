@@ -1,7 +1,9 @@
 package com.bohdanzhuvak.productservice.service;
 
+import com.bohdanzhuvak.commonexceptions.exception.CategoryNotFoundException;
 import com.bohdanzhuvak.productservice.dto.CategoryRequest;
 import com.bohdanzhuvak.productservice.dto.CategoryResponse;
+import com.bohdanzhuvak.productservice.mapper.CategoryMapper;
 import com.bohdanzhuvak.productservice.model.Category;
 import com.bohdanzhuvak.productservice.repository.CategoryRepository;
 import lombok.RequiredArgsConstructor;
@@ -16,25 +18,51 @@ import java.util.stream.Collectors;
 @Slf4j
 public class CategoryService {
   private final CategoryRepository categoryRepository;
+  private final CategoryMapper categoryMapper;
 
-  public void createCategory(CategoryRequest categoryRequest) {
-    Category category = Category.builder()
-            .name(categoryRequest.name())
-            .build();
-    categoryRepository.save(category);
+  public CategoryResponse createCategory(CategoryRequest categoryRequest) {
+    Category category = categoryRepository.save(categoryMapper.toCategory(categoryRequest));
+
     log.info("Category {} is saved", category.getId());
+
+    return categoryMapper.toCategoryResponse(category);
   }
 
   public List<CategoryResponse> getAllCategories() {
     List<Category> categories = categoryRepository.findAll();
+
     log.info("Retrieved {} categories", categories.size());
-    return categories.stream().map(this::mapToProductDTO).collect(Collectors.toList());
+
+    return categories.stream().map(categoryMapper::toCategoryResponse).collect(Collectors.toList());
   }
 
-  private CategoryResponse mapToProductDTO(Category category) {
-    return CategoryResponse.builder()
-            .id(category.getId())
-            .name(category.getName())
-            .build();
+  public CategoryResponse getCategory(String id) {
+    Category category = categoryRepository.findById(id)
+        .orElseThrow(() -> new CategoryNotFoundException(id));
+
+    log.info("Category {} is retrieved", category.getId());
+
+    return categoryMapper.toCategoryResponse(category);
+  }
+
+  public CategoryResponse updateCategory(String id, CategoryRequest categoryRequest) {
+    Category categoryResponse = categoryRepository.findById(id)
+        .map(existingCategory -> categoryMapper.copyRequestToCategory(categoryRequest, existingCategory))
+        .map(categoryRepository::save)
+        .orElseThrow(() -> new CategoryNotFoundException("Category " + id + " not found"));
+
+    log.info("Category {} is updated", id);
+
+    return categoryMapper.toCategoryResponse(categoryResponse);
+  }
+
+  public void deleteCategory(String id) {
+    categoryRepository.findById(id)
+        .ifPresentOrElse(category -> categoryRepository.deleteById(id),
+            () -> {
+              log.info("Category with id {} not found", id);
+              throw new CategoryNotFoundException("Category with id " + id + " not found");
+            }
+        );
   }
 }

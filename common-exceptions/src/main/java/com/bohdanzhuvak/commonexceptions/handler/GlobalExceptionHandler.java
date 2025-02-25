@@ -1,5 +1,6 @@
 package com.bohdanzhuvak.commonexceptions.handler;
 
+import com.bohdanzhuvak.commonexceptions.exception.CategoryNotFoundException;
 import com.bohdanzhuvak.commonexceptions.exception.OrderNotFoundException;
 import com.bohdanzhuvak.commonexceptions.exception.ProductNotFoundException;
 import com.bohdanzhuvak.commonexceptions.model.ErrorResponse;
@@ -18,7 +19,7 @@ import java.util.List;
 @RestControllerAdvice
 @Slf4j
 public class GlobalExceptionHandler {
-  @ExceptionHandler({OrderNotFoundException.class, ProductNotFoundException.class})
+  @ExceptionHandler({OrderNotFoundException.class, ProductNotFoundException.class, CategoryNotFoundException.class})
   public ResponseEntity<ErrorResponse> handleBusinessExceptions(Exception ex) {
     log.warn("Business error: {}", ex.getMessage());
     return new ResponseEntity<>(new ErrorResponse(ex.getMessage()), HttpStatus.NOT_FOUND);
