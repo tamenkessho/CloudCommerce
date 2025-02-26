@@ -3,6 +3,7 @@ package com.bohdanzhuvak.productservice.controller;
 import com.bohdanzhuvak.productservice.dto.CategoryRequest;
 import com.bohdanzhuvak.productservice.dto.CategoryResponse;
 import com.bohdanzhuvak.productservice.service.CategoryService;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -26,6 +27,7 @@ public class CategoryController {
   private final CategoryService categoryService;
 
   @PostMapping
+  @SecurityRequirement(name = "Bearer Authentication")
   @ResponseStatus(HttpStatus.CREATED)
   public CategoryResponse createCategory(@RequestBody CategoryRequest categoryRequest) {
     log.info("Post /api/categories: {}", categoryRequest);
@@ -47,6 +49,7 @@ public class CategoryController {
   }
 
   @PutMapping("/{id}")
+  @SecurityRequirement(name = "Bearer Authentication")
   @ResponseStatus(HttpStatus.OK)
   public CategoryResponse updateCategory(@PathVariable String id,
                                          @RequestBody CategoryRequest categoryRequest) {
@@ -55,6 +58,7 @@ public class CategoryController {
   }
 
   @DeleteMapping("/{id}")
+  @SecurityRequirement(name = "Bearer Authentication")
   @ResponseStatus(HttpStatus.NO_CONTENT)
   public void deleteCategory(@PathVariable String id) {
     log.info("Delete /api/categories/{}", id);

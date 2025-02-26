@@ -1,0 +1,5 @@
+openapi:
+  service:
+    title: openapi doc
+    url: http://localhost:8080
+    version: 1.0.0

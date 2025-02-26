@@ -3,6 +3,7 @@ package com.bohdanzhuvak.orderservice.controller;
 import com.bohdanzhuvak.orderservice.dto.OrderRequest;
 import com.bohdanzhuvak.orderservice.dto.OrderResponse;
 import com.bohdanzhuvak.orderservice.service.OrderService;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -13,6 +14,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/orders")
+@SecurityRequirement(name = "Bearer Authentication")
 @RequiredArgsConstructor
 @Slf4j
 public class OrderController {

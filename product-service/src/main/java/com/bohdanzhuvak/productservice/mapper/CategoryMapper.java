@@ -6,6 +6,7 @@ import com.bohdanzhuvak.productservice.model.Category;
 import org.mapstruct.BeanMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.mapstruct.MappingTarget;
 import org.mapstruct.NullValueCheckStrategy;
 import org.mapstruct.NullValuePropertyMappingStrategy;
 
@@ -17,7 +18,7 @@ public interface CategoryMapper {
   @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE,
       nullValueCheckStrategy = NullValueCheckStrategy.ALWAYS)
   @Mapping(target = "id", ignore = true)
-  void applyRequestToCategory(CategoryRequest categoryRequest, Category existingCategory);
+  void applyRequestToCategory(CategoryRequest categoryRequest, @MappingTarget Category existingCategory);
 
   default Category copyRequestToCategory(CategoryRequest categoryRequest, Category existingCategory){
     Category copy = existingCategory.toBuilder().build();

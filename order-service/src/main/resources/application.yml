@@ -11,3 +11,15 @@ product-service:
 
 server:
   port: 8082
+
+openapi:
+  service:
+    title: order-service doc
+    version: 1.0.0
+    url: http://localhost:8080
+
+springdoc:
+  api-docs:
+    enabled: true
+  swagger-ui:
+    enabled: false

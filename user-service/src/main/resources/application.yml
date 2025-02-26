@@ -19,3 +19,15 @@ jwt:
   secret-key: MWZjb2RmZDZqNTZkdWZncmZ3ZmR1ZnNnZGZzZ2ZkZnNnZGRzZw== # Generate with: openssl rand -base64 32
   access-token-expiration: PT5M # 5 min
   refresh-token-expiration: P7D # 7 days
+
+openapi:
+  service:
+    title: user-service doc
+    version: 1.0.0
+    url: http://localhost:8080
+
+springdoc:
+  api-docs:
+    enabled: true
+  swagger-ui:
+    enabled: false

@@ -22,6 +22,7 @@
         <module>user-service</module>
         <module>order-service</module>
         <module>product-service</module>
+        <module>common-documentation</module>
     </modules>
 
     <properties>

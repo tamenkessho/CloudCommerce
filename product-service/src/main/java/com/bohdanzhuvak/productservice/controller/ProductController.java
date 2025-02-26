@@ -3,6 +3,7 @@ package com.bohdanzhuvak.productservice.controller;
 import com.bohdanzhuvak.productservice.dto.ProductRequest;
 import com.bohdanzhuvak.productservice.dto.ProductResponse;
 import com.bohdanzhuvak.productservice.service.ProductService;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
@@ -31,6 +32,7 @@ public class ProductController {
   private final ProductService productService;
 
   @PostMapping
+  @SecurityRequirement(name = "Bearer Authentication")
   @ResponseStatus(HttpStatus.CREATED)
   public ProductResponse createProduct(@RequestBody ProductRequest productRequest) {
     log.info("Post /api/products: {}", productRequest);
@@ -54,6 +56,7 @@ public class ProductController {
   }
 
   @PutMapping("/{id}")
+  @SecurityRequirement(name = "Bearer Authentication")
   @ResponseStatus(HttpStatus.OK)
   public ProductResponse updateProduct(@PathVariable String id,
                                        @RequestBody ProductRequest productRequest) {
@@ -62,6 +65,7 @@ public class ProductController {
   }
 
   @DeleteMapping("/{id}")
+  @SecurityRequirement(name = "Bearer Authentication")
   @ResponseStatus(HttpStatus.NO_CONTENT)
   public void deleteProduct(@PathVariable String id) {
     log.info("Delete /api/products/{}", id);

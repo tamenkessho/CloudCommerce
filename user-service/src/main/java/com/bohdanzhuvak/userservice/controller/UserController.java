@@ -2,6 +2,7 @@ package com.bohdanzhuvak.userservice.controller;
 
 import com.bohdanzhuvak.userservice.dto.UserResponse;
 import com.bohdanzhuvak.userservice.service.UserService;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -17,6 +18,7 @@ public class UserController {
   private final UserService userService;
 
   @GetMapping("/me")
+  @SecurityRequirement(name = "Bearer Authentication")
   @PreAuthorize("hasRole('USER')")
   public UserResponse getCurrentUser(@AuthenticationPrincipal UserDetails userDetails) {
     return userService.getUserById(userDetails.getUsername());
