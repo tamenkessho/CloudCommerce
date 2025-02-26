@@ -1,6 +1,6 @@
 package com.bohdanzhuvak.orderservice;
 
-import com.bohdanzhuvak.commonexceptions.exception.OrderNotFoundException;
+import com.bohdanzhuvak.commonexceptions.exception.impl.ResourceNotFoundException;
 import com.bohdanzhuvak.orderservice.controller.OrderController;
 import com.bohdanzhuvak.orderservice.dto.OrderResponse;
 import com.bohdanzhuvak.orderservice.service.OrderService;
@@ -17,8 +17,11 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(OrderController.class)
@@ -86,20 +89,17 @@ class OrderControllerTest {
             }
             """;
 
-    String expectedErrorJson = """
-            {
-                "message": "Validation failed",
-                "errors": [
-                    "items: Order items cannot be empty"
-                ]
-            }
-            """;
-
     mockMvc.perform(post("/api/orders")
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .content(invalidRequestJson))
-            .andExpect(status().isBadRequest())
-            .andExpect(content().json(expectedErrorJson));
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(invalidRequestJson))
+        .andExpect(status().isBadRequest())
+        .andExpect(jsonPath("$.status").value(400))
+        .andExpect(jsonPath("$.error").value("Bad Request"))
+        .andExpect(jsonPath("$.message").value("Validation failed"))
+        .andExpect(jsonPath("$.path").value("/api/orders"))
+        .andExpect(jsonPath("$.code").value("VALIDATION_FAILED"))
+        .andExpect(jsonPath("$.details[0].field").value("items"))
+        .andExpect(jsonPath("$.details[0].message").value("Order items cannot be empty"));
   }
 
   // Test for retrieving an order by ID
@@ -143,7 +143,7 @@ class OrderControllerTest {
             """;
 
     when(orderService.getOrderById(orderId))
-            .thenThrow(new OrderNotFoundException("Order not found with id: non-existent"));
+            .thenThrow(new ResourceNotFoundException("Order not found with id: non-existent"));
 
     mockMvc.perform(get("/api/orders/{id}", orderId))
             .andExpect(status().isNotFound())

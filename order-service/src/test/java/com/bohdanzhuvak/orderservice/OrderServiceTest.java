@@ -1,7 +1,7 @@
 package com.bohdanzhuvak.orderservice;
 
-import com.bohdanzhuvak.commonexceptions.exception.OrderNotFoundException;
-import com.bohdanzhuvak.commonexceptions.exception.ProductNotFoundException;
+import com.bohdanzhuvak.commonexceptions.exception.impl.InvalidOrderStateException;
+import com.bohdanzhuvak.commonexceptions.exception.impl.ResourceNotFoundException;
 import com.bohdanzhuvak.commonsecurity.utils.SecurityUtils;
 import com.bohdanzhuvak.orderservice.client.ProductClient;
 import com.bohdanzhuvak.orderservice.dto.OrderItemRequest;
@@ -30,7 +30,10 @@ import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class OrderServiceTest {
@@ -86,7 +89,7 @@ class OrderServiceTest {
             ), null, null));
 
     // Act & Assert
-    assertThrows(ProductNotFoundException.class,
+    assertThrows(ResourceNotFoundException.class,
             () -> orderService.createOrder(request));
 
     verify(orderRepository, never()).save(any());
@@ -136,7 +139,7 @@ class OrderServiceTest {
     when(orderRepository.findById("invalid")).thenReturn(Optional.empty());
 
     // Act & Assert
-    assertThrows(OrderNotFoundException.class,
+    assertThrows(ResourceNotFoundException.class,
             () -> orderService.getOrderById("invalid"));
   }
 
@@ -195,7 +198,7 @@ class OrderServiceTest {
     when(orderRepository.findById("order123")).thenReturn(Optional.of(order));
 
     // Act & Assert
-    assertThrows(IllegalStateException.class,
+    assertThrows(InvalidOrderStateException.class,
             () -> orderService.cancelOrder("order123"));
 
     verify(orderRepository, never()).save(any());
@@ -207,7 +210,7 @@ class OrderServiceTest {
     when(orderRepository.findById("invalid")).thenReturn(Optional.empty());
 
     // Act & Assert
-    assertThrows(OrderNotFoundException.class,
+    assertThrows(ResourceNotFoundException.class,
             () -> orderService.cancelOrder("invalid"));
   }
 

@@ -4,6 +4,7 @@ import com.bohdanzhuvak.productservice.dto.ProductRequest;
 import com.bohdanzhuvak.productservice.dto.ProductResponse;
 import com.bohdanzhuvak.productservice.service.ProductService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
@@ -34,7 +35,7 @@ public class ProductController {
   @PostMapping
   @SecurityRequirement(name = "Bearer Authentication")
   @ResponseStatus(HttpStatus.CREATED)
-  public ProductResponse createProduct(@RequestBody ProductRequest productRequest) {
+  public ProductResponse createProduct(@RequestBody @Valid ProductRequest productRequest) {
     log.info("Post /api/products: {}", productRequest);
     return productService.createProduct(productRequest);
   }

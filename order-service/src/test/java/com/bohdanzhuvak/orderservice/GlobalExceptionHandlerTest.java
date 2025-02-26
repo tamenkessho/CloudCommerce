@@ -1,7 +1,7 @@
 package com.bohdanzhuvak.orderservice;
 
-import com.bohdanzhuvak.commonexceptions.exception.OrderNotFoundException;
-import com.bohdanzhuvak.commonexceptions.exception.ProductNotFoundException;
+import com.bohdanzhuvak.commonexceptions.exception.impl.InvalidOrderStateException;
+import com.bohdanzhuvak.commonexceptions.exception.impl.ResourceNotFoundException;
 import com.bohdanzhuvak.orderservice.controller.OrderController;
 import com.bohdanzhuvak.orderservice.service.OrderService;
 import feign.FeignException;
@@ -20,7 +20,9 @@ import java.util.Collections;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -39,7 +41,7 @@ class GlobalExceptionHandlerTest {
   void handleProductNotFoundException_ShouldReturn404() throws Exception {
     // Arrange
     when(orderService.getOrderById(any()))
-            .thenThrow(new ProductNotFoundException("Product not found"));
+            .thenThrow(new ResourceNotFoundException("Product not found"));
 
     // Act & Assert
     mockMvc.perform(get("/api/orders/123"))
@@ -51,7 +53,7 @@ class GlobalExceptionHandlerTest {
   void handleOrderNotFoundException_ShouldReturn404() throws Exception {
     // Arrange
     when(orderService.getOrderById(any()))
-            .thenThrow(new OrderNotFoundException("Order not found"));
+            .thenThrow(new ResourceNotFoundException("Order not found"));
 
     // Act & Assert
     mockMvc.perform(get("/api/orders/123"))
@@ -63,11 +65,11 @@ class GlobalExceptionHandlerTest {
   void handleIllegalStateException_ShouldReturn400() throws Exception {
     // Arrange
     when(orderService.cancelOrder(any()))
-            .thenThrow(new IllegalStateException("Order already cancelled"));
+            .thenThrow(new InvalidOrderStateException("Order already cancelled"));
 
     // Act & Assert
     mockMvc.perform(put("/api/orders/123/cancel"))
-            .andExpect(status().isBadRequest())
+            .andExpect(status().isConflict())
             .andExpect(jsonPath("$.message").value("Order already cancelled"));
   }
 
@@ -78,7 +80,7 @@ class GlobalExceptionHandlerTest {
                     .contentType(MediaType.APPLICATION_JSON)
                     .content("{}"))
             .andExpect(status().isBadRequest())
-            .andExpect(jsonPath("$.errors").isArray());
+            .andExpect(jsonPath("$.details").isArray());
   }
 
   @Test
@@ -122,6 +124,6 @@ class GlobalExceptionHandlerTest {
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(validRequest))
             .andExpect(status().isServiceUnavailable())
-            .andExpect(jsonPath("$.message").value("Dependent service is unavailable"));
+            .andExpect(jsonPath("$.message").value("Service product-service is unavailable"));
   }
 }

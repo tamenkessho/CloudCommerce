@@ -1,7 +1,7 @@
 package com.bohdanzhuvak.userservice.service;
 
+import com.bohdanzhuvak.commonexceptions.exception.impl.ResourceNotFoundException;
 import com.bohdanzhuvak.userservice.dto.UserResponse;
-import com.bohdanzhuvak.userservice.exception.UserNotFoundException;
 import com.bohdanzhuvak.userservice.model.User;
 import com.bohdanzhuvak.userservice.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -16,7 +16,7 @@ public class UserService {
 
   public UserResponse getUserById(String id) {
     return userRepository.findById(id).map(this::mapToResponse)
-        .orElseThrow(() -> new UserNotFoundException(id));
+        .orElseThrow(() -> new ResourceNotFoundException("User with id " + id + " not found"));
   }
 
   private UserResponse mapToResponse(User user) {

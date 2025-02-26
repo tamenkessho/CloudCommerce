@@ -1,13 +1,13 @@
 package com.bohdanzhuvak.userservice.service;
 
+import com.bohdanzhuvak.commonexceptions.exception.impl.InvalidCredentialsException;
+import com.bohdanzhuvak.commonexceptions.exception.impl.InvalidTokenException;
+import com.bohdanzhuvak.commonexceptions.exception.impl.ResourceNotFoundException;
+import com.bohdanzhuvak.commonexceptions.exception.impl.UserAlreadyExistsException;
 import com.bohdanzhuvak.userservice.dto.LoginRequest;
 import com.bohdanzhuvak.userservice.dto.TokenResponse;
 import com.bohdanzhuvak.userservice.dto.UserRequest;
 import com.bohdanzhuvak.userservice.dto.UserResponse;
-import com.bohdanzhuvak.userservice.exception.InvalidCredentialsException;
-import com.bohdanzhuvak.userservice.exception.InvalidTokenException;
-import com.bohdanzhuvak.userservice.exception.UserAlreadyExistsException;
-import com.bohdanzhuvak.userservice.exception.UserNotFoundException;
 import com.bohdanzhuvak.userservice.model.Role;
 import com.bohdanzhuvak.userservice.model.User;
 import com.bohdanzhuvak.userservice.repository.UserRepository;
@@ -56,7 +56,7 @@ public class AuthService {
 
   public TokenResponse login(LoginRequest request, HttpServletResponse response) {
     User user = userRepository.findByEmail(request.email())
-        .orElseThrow(() -> new UserNotFoundException(request.email()));
+        .orElseThrow(() -> new ResourceNotFoundException("User with email " + request.email() + " not found"));
 
     if (!passwordEncoder.matches(request.password(), user.getPasswordHash())) {
       throw new InvalidCredentialsException();
@@ -83,7 +83,7 @@ public class AuthService {
 
     if (refreshToken == null || !tokenProvider.validateToken(refreshToken)) {
       cookieUtil.clearRefreshTokenCookie(response);
-      throw new InvalidTokenException("Invalid refresh token");
+      throw new InvalidTokenException();
     }
 
     String userId = tokenProvider.getUserIdFromToken(refreshToken);

@@ -1,7 +1,7 @@
 package com.bohdanzhuvak.orderservice.service;
 
-import com.bohdanzhuvak.commonexceptions.exception.OrderNotFoundException;
-import com.bohdanzhuvak.commonexceptions.exception.ProductNotFoundException;
+import com.bohdanzhuvak.commonexceptions.exception.impl.InvalidOrderStateException;
+import com.bohdanzhuvak.commonexceptions.exception.impl.ResourceNotFoundException;
 import com.bohdanzhuvak.commonsecurity.utils.SecurityUtils;
 import com.bohdanzhuvak.orderservice.client.ProductClient;
 import com.bohdanzhuvak.orderservice.dto.OrderItemResponse;
@@ -45,7 +45,7 @@ public class OrderService {
                         .quantity(item.quantity())
                         .build();
               } catch (FeignException.NotFound ex) {
-                throw new ProductNotFoundException("Product not found: " + item.productId());
+                throw new ResourceNotFoundException("Product with id " + item.productId() + " not found");
               }
             }).toList();
 
@@ -71,7 +71,7 @@ public class OrderService {
   @PreAuthorize("hasRole('USER')")
   public OrderResponse getOrderById(String id) {
     Order order = orderRepository.findById(id)
-            .orElseThrow(() -> new OrderNotFoundException("Order not found with id: " + id));
+            .orElseThrow(() -> new ResourceNotFoundException("Order with id: " + id + " not found"));
 
     securityUtils.checkAccessToUserData(order.getUserId());
 
@@ -92,12 +92,12 @@ public class OrderService {
   @PreAuthorize("hasRole('USER')")
   public OrderResponse cancelOrder(String id) {
     Order order = orderRepository.findById(id)
-            .orElseThrow(() -> new OrderNotFoundException("Order not found with id: " + id));
+            .orElseThrow(() -> new ResourceNotFoundException("Order with id: " + id + " not found"));
 
     securityUtils.checkAccessToUserData(order.getUserId());
 
     if (order.getStatus() != OrderStatus.CREATED) {
-      throw new IllegalStateException("Cannot cancel order in status: " + order.getStatus());
+      throw new InvalidOrderStateException("Cannot cancel order in status: " + order.getStatus());
     }
 
     order.setStatus(OrderStatus.CANCELLED);

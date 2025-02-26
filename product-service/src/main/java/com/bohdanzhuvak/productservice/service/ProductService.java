@@ -1,6 +1,6 @@
 package com.bohdanzhuvak.productservice.service;
 
-import com.bohdanzhuvak.commonexceptions.exception.ProductNotFoundException;
+import com.bohdanzhuvak.commonexceptions.exception.impl.ResourceNotFoundException;
 import com.bohdanzhuvak.productservice.dto.ProductRequest;
 import com.bohdanzhuvak.productservice.dto.ProductResponse;
 import com.bohdanzhuvak.productservice.mapper.ProductMapper;
@@ -26,11 +26,10 @@ public class ProductService {
 
   public ProductResponse createProduct(ProductRequest productRequest) {
     Product product = Optional.of(productRequest)
-        .map(request -> categoryRepository.findById(productRequest.categoryId())
-                .orElseThrow(() -> new ProductNotFoundException("Category " + productRequest.categoryId() + " not found")))
-        .map(category -> productMapper.toProduct(productRequest, category))
+        .flatMap(request -> categoryRepository.findById(request.categoryId())
+            .map(category -> productMapper.toProduct(request, category)))
         .map(productRepository::save)
-        .orElseThrow(() -> new ProductNotFoundException("Product not found"));
+        .orElseThrow(() -> new ResourceNotFoundException("Category " + productRequest.categoryId() + " not found"));
 
     log.info("Product {} is saved", product.getId());
 
@@ -39,7 +38,7 @@ public class ProductService {
 
   public ProductResponse getProductById(String productId) {
     Product product = productRepository.findById(productId)
-        .orElseThrow(() -> new ProductNotFoundException("Product " + productId + " not found"));
+        .orElseThrow(() -> new ResourceNotFoundException("Product with id " + productId + " not found"));
 
     log.info("Product {} is found", productId);
 
@@ -58,7 +57,7 @@ public class ProductService {
     Product product = productRepository.findById(id)
         .map(existingProduct -> productMapper.copyRequestToProduct(productRequest, existingProduct))
         .map(productRepository::save)
-        .orElseThrow(() -> new ProductNotFoundException("Product " + id + " not found"));
+        .orElseThrow(() -> new ResourceNotFoundException("Product with id " + id + " not found"));
 
     log.info("Product {} is updated", id);
 
@@ -69,7 +68,7 @@ public class ProductService {
     productRepository.findById(productId)
         .ifPresentOrElse(
             product -> productRepository.deleteById(productId),
-            () -> { throw new ProductNotFoundException("Product " + productId + " not found"); }
+            () -> { throw new ResourceNotFoundException("Product with id " + productId + " not found"); }
         );
 
     log.info("Product {} is deleted", productId);

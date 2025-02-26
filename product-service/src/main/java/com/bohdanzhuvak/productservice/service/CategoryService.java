@@ -1,6 +1,6 @@
 package com.bohdanzhuvak.productservice.service;
 
-import com.bohdanzhuvak.commonexceptions.exception.CategoryNotFoundException;
+import com.bohdanzhuvak.commonexceptions.exception.impl.ResourceNotFoundException;
 import com.bohdanzhuvak.productservice.dto.CategoryRequest;
 import com.bohdanzhuvak.productservice.dto.CategoryResponse;
 import com.bohdanzhuvak.productservice.mapper.CategoryMapper;
@@ -38,7 +38,7 @@ public class CategoryService {
 
   public CategoryResponse getCategory(String id) {
     Category category = categoryRepository.findById(id)
-        .orElseThrow(() -> new CategoryNotFoundException(id));
+        .orElseThrow(() -> new ResourceNotFoundException("Category with id " + id + " not found"));
 
     log.info("Category {} is retrieved", category.getId());
 
@@ -49,7 +49,7 @@ public class CategoryService {
     Category categoryResponse = categoryRepository.findById(id)
         .map(existingCategory -> categoryMapper.copyRequestToCategory(categoryRequest, existingCategory))
         .map(categoryRepository::save)
-        .orElseThrow(() -> new CategoryNotFoundException("Category " + id + " not found"));
+        .orElseThrow(() -> new ResourceNotFoundException("Category with id " + id + " not found"));
 
     log.info("Category {} is updated", id);
 
@@ -61,7 +61,7 @@ public class CategoryService {
         .ifPresentOrElse(category -> categoryRepository.deleteById(id),
             () -> {
               log.info("Category with id {} not found", id);
-              throw new CategoryNotFoundException("Category with id " + id + " not found");
+              throw new ResourceNotFoundException("Category with id " + id + " not found");
             }
         );
   }
