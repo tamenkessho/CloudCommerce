@@ -1,0 +1,25 @@
+spring:
+  application:
+    name: order-service
+  data:
+    mongodb:
+      uri: ${MONGODB_URI}
+      auto-index-creation: true
+
+product-service:
+  url: http://${PRODUCT_SERVICE_HOST:localhost}:8081
+
+server:
+  port: 8084
+
+openapi:
+  service:
+    title: cart-service doc
+    version: 1.0.0
+    url: http://localhost:8080
+
+springdoc:
+  api-docs:
+    enabled: true
+  swagger-ui:
+    enabled: false

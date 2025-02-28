@@ -33,3 +33,5 @@ springdoc:
         name: Product Service
       - url: http://localhost:8080/api/user-service/v3/api-docs
         name: User Service
+      - url: http://localhost:8080/api/cart-service/v3/api-docs
+        name: Cart Service
