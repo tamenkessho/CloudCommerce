@@ -29,12 +29,11 @@ public class CartService {
     ProductResponse product = getProductOrThrow(cartItemRequest.productId());
     CartItem cartItem = cartMapper.toCartItem(cartItemRequest, product.price());
 
-    Cart savedCart = cartRepository.findByUserId(userId)
-        .map(cart -> addItemToCart(cart, cartItem))
-        .map(cartRepository::save)
+    Cart cart = cartRepository.findByUserId(userId)
+        .map(existingCart -> addItemToCart(existingCart, cartItem))
         .orElseGet(() -> createNewCart(userId, cartItem));
 
-    return cartMapper.toCartResponse(savedCart);
+    return cartMapper.toCartResponse(cartRepository.save(cart));
   }
 
   public CartResponse removeItemById(String productId, String userId) {
