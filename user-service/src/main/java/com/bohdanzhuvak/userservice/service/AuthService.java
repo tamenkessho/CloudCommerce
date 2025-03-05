@@ -8,6 +8,7 @@ import com.bohdanzhuvak.userservice.dto.LoginRequest;
 import com.bohdanzhuvak.userservice.dto.TokenResponse;
 import com.bohdanzhuvak.userservice.dto.UserRequest;
 import com.bohdanzhuvak.userservice.dto.UserResponse;
+import com.bohdanzhuvak.userservice.mapper.UserMapper;
 import com.bohdanzhuvak.userservice.model.Role;
 import com.bohdanzhuvak.userservice.model.User;
 import com.bohdanzhuvak.userservice.repository.UserRepository;
@@ -15,6 +16,7 @@ import com.bohdanzhuvak.userservice.security.JwtCookieUtil;
 import com.bohdanzhuvak.userservice.security.JwtTokenProvider;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import java.util.Set;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -22,8 +24,6 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
@@ -34,6 +34,7 @@ public class AuthService {
   private final JwtTokenProvider tokenProvider;
   private final JwtCookieUtil cookieUtil;
   private final UserDetailsService userDetailsService;
+  private final UserMapper userMapper;
 
   @Transactional
   public UserResponse register(UserRequest request) {
@@ -51,7 +52,7 @@ public class AuthService {
 
     user = userRepository.save(user);
     log.info("User registered: {}", user.getEmail());
-    return mapToResponse(user);
+    return userMapper.toResponse(user);
   }
 
   public TokenResponse login(LoginRequest request, HttpServletResponse response) {
@@ -65,17 +66,6 @@ public class AuthService {
     cookieUtil.addRefreshTokenCookie(response, refreshToken);
 
     return tokenProvider.generateAccessToken(user);
-  }
-
-  private UserResponse mapToResponse(User user) {
-    return UserResponse.builder()
-        .id(user.getId())
-        .email(user.getEmail())
-        .firstName(user.getFirstName())
-        .lastName(user.getLastName())
-        .roles(user.getRoles())
-        .createdAt(user.getCreatedAt())
-        .build();
   }
 
   public TokenResponse refreshAccessToken(HttpServletRequest request, HttpServletResponse response) {

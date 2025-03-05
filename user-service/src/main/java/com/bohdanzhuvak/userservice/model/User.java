@@ -1,5 +1,9 @@
 package com.bohdanzhuvak.userservice.model;
 
+import java.time.LocalDateTime;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -11,11 +15,6 @@ import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-
-import java.time.Instant;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
 
 @Data
 @Builder
@@ -38,10 +37,10 @@ public class User implements UserDetails {
   private Set<Role> roles = new HashSet<>();
 
   @CreatedDate
-  private Instant createdAt;
+  private LocalDateTime createdAt;
 
   @LastModifiedDate
-  private Instant updatedAt;
+  private LocalDateTime updatedAt;
 
   @Override
   public Collection<? extends GrantedAuthority> getAuthorities() {

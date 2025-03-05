@@ -1,10 +1,9 @@
 package com.bohdanzhuvak.userservice.dto;
 
 import com.bohdanzhuvak.userservice.model.Role;
-import lombok.Builder;
-
-import java.time.Instant;
+import java.time.LocalDateTime;
 import java.util.Set;
+import lombok.Builder;
 
 @Builder
 public record UserResponse(
@@ -13,5 +12,6 @@ public record UserResponse(
         String firstName,
         String lastName,
         Set<Role> roles,
-        Instant createdAt
+        LocalDateTime createdAt,
+        LocalDateTime updatedAt
 ) {}

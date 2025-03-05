@@ -1,12 +1,13 @@
 package com.bohdanzhuvak.orderservice.model;
 
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
+import java.util.List;
 import lombok.Builder;
 import lombok.Data;
+import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
-
-import java.math.BigDecimal;
-import java.time.Instant;
-import java.util.List;
+import org.springframework.data.annotation.LastModifiedDate;
 
 @Data
 @Builder
@@ -17,6 +18,9 @@ public class Order {
   private OrderStatus status;
   private BigDecimal totalPrice;
   private List<OrderItem> items;
-  private Instant createdAt;
+  @CreatedDate
+  private LocalDateTime createdAt;
+  @LastModifiedDate
+  private LocalDateTime updatedAt;
 }
 
