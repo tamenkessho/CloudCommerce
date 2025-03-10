@@ -2,41 +2,40 @@
 <project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xmlns="http://maven.apache.org/POM/4.0.0"
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <artifactId>cloud-commerce</artifactId>
+    <groupId>com.bohdanzhuvak</groupId>
+    <relativePath>../pom.xml</relativePath>
+    <version>1.0.0</version>
+  </parent>
+
   <artifactId>cart-service</artifactId>
+  <version>0.0.1-SNAPSHOT</version>
+
+  <name>cart-service</name>
+  <description>cart-service</description>
+
   <build>
     <plugins>
       <plugin>
         <artifactId>maven-compiler-plugin</artifactId>
-        <configuration>
-          <annotationProcessorPaths>
-            <path>
-              <artifactId>lombok</artifactId>
-              <groupId>org.projectlombok</groupId>
-            </path>
-            <path>
-              <artifactId>mapstruct-processor</artifactId>
-              <groupId>org.mapstruct</groupId>
-              <version>1.6.3</version>
-            </path>
-          </annotationProcessorPaths>
-        </configuration>
         <groupId>org.apache.maven.plugins</groupId>
       </plugin>
       <plugin>
         <artifactId>spring-boot-maven-plugin</artifactId>
-        <configuration>
-          <excludes>
-            <exclude>
-              <artifactId>lombok</artifactId>
-              <groupId>org.projectlombok</groupId>
-            </exclude>
-          </excludes>
-        </configuration>
         <groupId>org.springframework.boot</groupId>
       </plugin>
     </plugins>
   </build>
+
   <dependencies>
+    <dependency>
+      <artifactId>spring-boot-starter-web</artifactId>
+      <groupId>org.springframework.boot</groupId>
+    </dependency>
     <dependency>
       <artifactId>spring-boot-starter-data-mongodb</artifactId>
       <groupId>org.springframework.boot</groupId>
@@ -46,46 +45,29 @@
       <groupId>org.springframework.boot</groupId>
     </dependency>
     <dependency>
-      <artifactId>spring-boot-starter-web</artifactId>
-      <groupId>org.springframework.boot</groupId>
-    </dependency>
-    <dependency>
       <artifactId>mapstruct</artifactId>
       <groupId>org.mapstruct</groupId>
-      <version>1.6.3</version>
+    </dependency>
+    <dependency>
+      <artifactId>lombok</artifactId>
+      <groupId>org.projectlombok</groupId>
+    </dependency>
+    <dependency>
+      <artifactId>common-security</artifactId>
+      <groupId>com.bohdanzhuvak</groupId>
+    </dependency>
+    <dependency>
+      <artifactId>common-exceptions</artifactId>
+      <groupId>com.bohdanzhuvak</groupId>
+    </dependency>
+    <dependency>
+      <artifactId>common-documentation</artifactId>
+      <groupId>com.bohdanzhuvak</groupId>
     </dependency>
     <dependency>
       <artifactId>spring-boot-starter-test</artifactId>
       <groupId>org.springframework.boot</groupId>
       <scope>test</scope>
     </dependency>
-    <dependency>
-      <artifactId>common-security</artifactId>
-      <groupId>com.bohdanzhuvak</groupId>
-      <version>0.0.1-SNAPSHOT</version>
-    </dependency>
-    <dependency>
-      <artifactId>common-exceptions</artifactId>
-      <groupId>com.bohdanzhuvak</groupId>
-      <version>0.0.1-SNAPSHOT</version>
-    </dependency>
-    <dependency>
-      <artifactId>common-documentation</artifactId>
-      <groupId>com.bohdanzhuvak</groupId>
-      <version>0.0.1-SNAPSHOT</version>
-    </dependency>
   </dependencies>
-  <description>cart-service</description>
-  <modelVersion>4.0.0</modelVersion>
-  <name>cart-service</name>
-
-  <parent>
-    <artifactId>cloud-commerce</artifactId>
-    <groupId>com.bohdanzhuvak</groupId>
-    <relativePath>../pom.xml</relativePath>
-    <version>1.0.0</version>
-  </parent>
-
-  <version>0.0.1-SNAPSHOT</version>
-
 </project>

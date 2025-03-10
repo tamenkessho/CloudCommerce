@@ -2,7 +2,21 @@
 <project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xmlns="http://maven.apache.org/POM/4.0.0"
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <artifactId>cloud-commerce</artifactId>
+    <groupId>com.bohdanzhuvak</groupId>
+    <relativePath>../pom.xml</relativePath>
+    <version>1.0.0</version>
+  </parent>
+
   <artifactId>common-exceptions</artifactId>
+  <version>0.0.1-SNAPSHOT</version>
+
+  <name>common-exceptions</name>
+  <description>common-exceptions</description>
 
   <dependencies>
     <dependency>
@@ -17,30 +31,9 @@
       <artifactId>spring-security-core</artifactId>
       <groupId>org.springframework.security</groupId>
     </dependency>
+    <dependency>
+      <artifactId>lombok</artifactId>
+      <groupId>org.projectlombok</groupId>
+    </dependency>
   </dependencies>
-
-  <dependencyManagement>
-    <dependencies>
-      <dependency>
-        <artifactId>spring-cloud-dependencies</artifactId>
-        <groupId>org.springframework.cloud</groupId>
-        <scope>import</scope>
-        <type>pom</type>
-        <version>${spring-cloud.version}</version>
-      </dependency>
-    </dependencies>
-  </dependencyManagement>
-  <description>common-exceptions</description>
-  <modelVersion>4.0.0</modelVersion>
-  <name>common-exceptions</name>
-  <parent>
-    <artifactId>cloud-commerce</artifactId>
-    <groupId>com.bohdanzhuvak</groupId>
-    <relativePath>../pom.xml</relativePath>
-    <version>1.0.0</version>
-  </parent>
-  <properties>
-    <spring-cloud.version>2024.0.0</spring-cloud.version>
-  </properties>
-  <version>0.0.1-SNAPSHOT</version>
 </project>
