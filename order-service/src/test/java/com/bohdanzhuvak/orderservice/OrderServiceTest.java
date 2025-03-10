@@ -1,5 +1,12 @@
 package com.bohdanzhuvak.orderservice;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
 import com.bohdanzhuvak.commonexceptions.exception.impl.InvalidOrderStateException;
 import com.bohdanzhuvak.commonexceptions.exception.impl.ResourceNotFoundException;
 import com.bohdanzhuvak.commonsecurity.utils.SecurityUtils;
@@ -15,25 +22,18 @@ import com.bohdanzhuvak.orderservice.repository.OrderRepository;
 import com.bohdanzhuvak.orderservice.service.OrderService;
 import feign.FeignException;
 import feign.Request;
+import java.math.BigDecimal;
+import java.nio.charset.Charset;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-
-import java.math.BigDecimal;
-import java.nio.charset.Charset;
-import java.time.Instant;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.Mockito.any;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class OrderServiceTest {
@@ -54,7 +54,7 @@ class OrderServiceTest {
     OrderRequest request = new OrderRequest(List.of(itemRequest));
 
     ProductResponse productResponse = new ProductResponse(
-            "prod1", "Product 1", new BigDecimal("100.00")
+        "prod1", "Product 1", new BigDecimal("100.00")
     );
 
     when(productClient.getProductById("prod1")).thenReturn(productResponse);
@@ -79,18 +79,18 @@ class OrderServiceTest {
     OrderRequest request = new OrderRequest(List.of(itemRequest));
 
     when(productClient.getProductById("invalid"))
-            .thenThrow(new FeignException.NotFound("", Request.create(
-                    Request.HttpMethod.GET,
-                    "/api/products/123",
-                    Collections.emptyMap(),
-                    null,
-                    Charset.defaultCharset(),
-                    null
-            ), null, null));
+        .thenThrow(new FeignException.NotFound("", Request.create(
+            Request.HttpMethod.GET,
+            "/api/products/123",
+            Collections.emptyMap(),
+            null,
+            Charset.defaultCharset(),
+            null
+        ), null, null));
 
     // Act & Assert
     assertThrows(ResourceNotFoundException.class,
-            () -> orderService.createOrder(request));
+        () -> orderService.createOrder(request));
 
     verify(orderRepository, never()).save(any());
   }
@@ -99,20 +99,20 @@ class OrderServiceTest {
   void createOrder_ShouldCalculateTotalPriceCorrectly() {
     // Arrange
     List<OrderItemRequest> items = List.of(
-            new OrderItemRequest("prod1", 2),
-            new OrderItemRequest("prod2", 1)
+        new OrderItemRequest("prod1", 2),
+        new OrderItemRequest("prod2", 1)
     );
 
     when(productClient.getProductById("prod1"))
-            .thenReturn(new ProductResponse("prod1", "P1", new BigDecimal("50.00")));
+        .thenReturn(new ProductResponse("prod1", "P1", new BigDecimal("50.00")));
     when(productClient.getProductById("prod2"))
-            .thenReturn(new ProductResponse("prod2", "P2", new BigDecimal("100.00")));
+        .thenReturn(new ProductResponse("prod2", "P2", new BigDecimal("100.00")));
     when(orderRepository.save(any())).thenAnswer(inv -> inv.getArgument(0));
     when(securityUtils.getCurrentUserId()).thenReturn("user1");
 
     // Act
     OrderResponse response = orderService.createOrder(
-            new OrderRequest(items)
+        new OrderRequest(items)
     );
 
     // Assert
@@ -140,7 +140,7 @@ class OrderServiceTest {
 
     // Act & Assert
     assertThrows(ResourceNotFoundException.class,
-            () -> orderService.getOrderById("invalid"));
+        () -> orderService.getOrderById("invalid"));
   }
 
   @Test
@@ -149,8 +149,8 @@ class OrderServiceTest {
     Order order = createTestOrder();
     order.setId("order456");
     List<Order> orders = List.of(
-            createTestOrder(),
-            order
+        createTestOrder(),
+        order
     );
 
     when(orderRepository.findByUserId("user1")).thenReturn(orders);
@@ -199,7 +199,7 @@ class OrderServiceTest {
 
     // Act & Assert
     assertThrows(InvalidOrderStateException.class,
-            () -> orderService.cancelOrder("order123"));
+        () -> orderService.cancelOrder("order123"));
 
     verify(orderRepository, never()).save(any());
   }
@@ -211,24 +211,24 @@ class OrderServiceTest {
 
     // Act & Assert
     assertThrows(ResourceNotFoundException.class,
-            () -> orderService.cancelOrder("invalid"));
+        () -> orderService.cancelOrder("invalid"));
   }
 
   private Order createTestOrder() {
     return Order.builder()
-            .id("order123")
-            .userId("user1")
-            .status(OrderStatus.CREATED)
-            .totalPrice(new BigDecimal("100.00"))
-            .items(List.of(
-                    OrderItem.builder()
-                            .productId("prod1")
-                            .productName("Product 1")
-                            .quantity(1)
-                            .pricePerUnit(new BigDecimal("100.00"))
-                            .build()
-            ))
-            .createdAt(Instant.now())
-            .build();
+        .id("order123")
+        .userId("user1")
+        .status(OrderStatus.CREATED)
+        .totalPrice(new BigDecimal("100.00"))
+        .items(List.of(
+            OrderItem.builder()
+                .productId("prod1")
+                .productName("Product 1")
+                .quantity(1)
+                .pricePerUnit(new BigDecimal("100.00"))
+                .build()
+        ))
+        .createdAt(LocalDateTime.now())
+        .build();
   }
 }

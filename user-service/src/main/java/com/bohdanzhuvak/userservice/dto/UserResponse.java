@@ -7,11 +7,13 @@ import lombok.Builder;
 
 @Builder
 public record UserResponse(
-        String id,
-        String email,
-        String firstName,
-        String lastName,
-        Set<Role> roles,
-        LocalDateTime createdAt,
-        LocalDateTime updatedAt
-) {}
+    String id,
+    String email,
+    String firstName,
+    String lastName,
+    Set<Role> roles,
+    LocalDateTime createdAt,
+    LocalDateTime updatedAt
+) {
+
+}

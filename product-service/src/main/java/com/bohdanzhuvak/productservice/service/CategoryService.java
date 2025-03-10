@@ -6,17 +6,17 @@ import com.bohdanzhuvak.productservice.dto.CategoryResponse;
 import com.bohdanzhuvak.productservice.mapper.CategoryMapper;
 import com.bohdanzhuvak.productservice.model.Category;
 import com.bohdanzhuvak.productservice.repository.CategoryRepository;
+import java.util.List;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 @Slf4j
 public class CategoryService {
+
   private final CategoryRepository categoryRepository;
   private final CategoryMapper categoryMapper;
 
@@ -47,7 +47,8 @@ public class CategoryService {
 
   public CategoryResponse updateCategory(String id, CategoryRequest categoryRequest) {
     Category categoryResponse = categoryRepository.findById(id)
-        .map(existingCategory -> categoryMapper.copyRequestToCategory(categoryRequest, existingCategory))
+        .map(existingCategory -> categoryMapper.copyRequestToCategory(categoryRequest,
+            existingCategory))
         .map(categoryRepository::save)
         .orElseThrow(() -> new ResourceNotFoundException("Category with id " + id + " not found"));
 

@@ -1,11 +1,12 @@
 package com.bohdanzhuvak.cartservice.dto;
 
+import java.math.BigDecimal;
 import lombok.Builder;
 
-import java.math.BigDecimal;
-
 @Builder
-public record CartItemResponse (
+public record CartItemResponse(
     String productId,
     BigDecimal pricePerUnit,
-    String quantity) {}
+    String quantity) {
+
+}

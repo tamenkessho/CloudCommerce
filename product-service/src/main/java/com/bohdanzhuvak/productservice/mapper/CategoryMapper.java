@@ -12,15 +12,19 @@ import org.mapstruct.NullValuePropertyMappingStrategy;
 
 @Mapper(componentModel = "spring")
 public interface CategoryMapper {
+
   CategoryResponse toCategoryResponse(Category category);
+
   Category toCategory(CategoryRequest categoryRequest);
 
   @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE,
       nullValueCheckStrategy = NullValueCheckStrategy.ALWAYS)
   @Mapping(target = "id", ignore = true)
-  void applyRequestToCategory(CategoryRequest categoryRequest, @MappingTarget Category existingCategory);
+  void applyRequestToCategory(CategoryRequest categoryRequest,
+      @MappingTarget Category existingCategory);
 
-  default Category copyRequestToCategory(CategoryRequest categoryRequest, Category existingCategory){
+  default Category copyRequestToCategory(CategoryRequest categoryRequest,
+      Category existingCategory) {
     Category copy = existingCategory.toBuilder().build();
     applyRequestToCategory(categoryRequest, copy);
     return copy;

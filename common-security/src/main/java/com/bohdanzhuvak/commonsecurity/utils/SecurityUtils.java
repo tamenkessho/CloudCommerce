@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class SecurityUtils {
+
   public String getCurrentUserId() {
     Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
     if (authentication == null || !authentication.isAuthenticated()) {
@@ -22,7 +23,8 @@ public class SecurityUtils {
     if (authentication == null || !authentication.isAuthenticated()) {
       throw new AccessDeniedException("User not authenticated");
     }
-    return authentication.getAuthorities().stream().anyMatch(g -> g.getAuthority().equals(role.name()));
+    return authentication.getAuthorities().stream()
+        .anyMatch(g -> g.getAuthority().equals(role.name()));
   }
 
   public boolean hasAccessToUserData(String userId) {
@@ -30,7 +32,8 @@ public class SecurityUtils {
   }
 
   @PreAuthorize("hasRole('ADMIN') or authentication.name == #userId")
-  public void checkAccessToUserData(String userId) {}
+  public void checkAccessToUserData(String userId) {
+  }
 
 
 }

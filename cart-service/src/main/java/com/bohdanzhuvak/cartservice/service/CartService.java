@@ -10,16 +10,16 @@ import com.bohdanzhuvak.cartservice.model.CartItem;
 import com.bohdanzhuvak.cartservice.repository.CartRepository;
 import com.bohdanzhuvak.commonexceptions.exception.impl.ResourceNotFoundException;
 import feign.FeignException;
+import java.util.ArrayList;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.List;
-
 @Service
 @RequiredArgsConstructor
 public class CartService {
+
   private final CartRepository cartRepository;
   private final CartMapper cartMapper;
   private final ProductClient productClient;
@@ -60,7 +60,9 @@ public class CartService {
     cartRepository.findByUserId(userId)
         .ifPresentOrElse(
             cartRepository::delete,
-            () -> {throw new ResourceNotFoundException("Cart of user " + userId + " not found");}
+            () -> {
+              throw new ResourceNotFoundException("Cart of user " + userId + " not found");
+            }
         );
   }
 

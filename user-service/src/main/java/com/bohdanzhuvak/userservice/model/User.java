@@ -21,6 +21,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 @AllArgsConstructor
 @NoArgsConstructor
 public class User implements UserDetails {
+
   @Id
   private String id;
 

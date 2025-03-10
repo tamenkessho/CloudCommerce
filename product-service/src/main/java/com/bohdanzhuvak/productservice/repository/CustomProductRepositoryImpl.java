@@ -2,6 +2,8 @@ package com.bohdanzhuvak.productservice.repository;
 
 import com.bohdanzhuvak.productservice.filter.factory.CriteriaFilterFactory;
 import com.bohdanzhuvak.productservice.model.Product;
+import java.util.List;
+import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -11,16 +13,15 @@ import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
-import java.util.Map;
-
 @RequiredArgsConstructor
 @Repository
 public class CustomProductRepositoryImpl implements CustomProductRepository {
+
   private final MongoTemplate mongoTemplate;
   private final CriteriaFilterFactory filterFactory;
+
   @Override
-  public Page<Product> findProductsByFilters(Map<String, String> filters, Pageable pageable){
+  public Page<Product> findProductsByFilters(Map<String, String> filters, Pageable pageable) {
     Query query = new Query();
     List<Criteria> criteriaList = filterFactory.createFilters(filters);
     if (!criteriaList.isEmpty()) {

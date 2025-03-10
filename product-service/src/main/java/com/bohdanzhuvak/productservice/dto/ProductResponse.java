@@ -1,14 +1,15 @@
 package com.bohdanzhuvak.productservice.dto;
 
+import java.math.BigDecimal;
 import lombok.Builder;
 
-import java.math.BigDecimal;
-
 @Builder
-public record ProductResponse (
-        String id,
-        String name,
-        String description,
-        String category,
-        BigDecimal price
-){}
+public record ProductResponse(
+    String id,
+    String name,
+    String description,
+    String category,
+    BigDecimal price
+) {
+
+}

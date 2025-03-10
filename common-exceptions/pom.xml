@@ -1,45 +1,46 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
-	<modelVersion>4.0.0</modelVersion>
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns="http://maven.apache.org/POM/4.0.0"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <artifactId>common-exceptions</artifactId>
 
-	<parent>
-		<groupId>com.bohdanzhuvak</groupId>
-		<artifactId>cloud-commerce</artifactId>
-		<version>1.0.0</version>
-		<relativePath>../pom.xml</relativePath>
-	</parent>
+  <dependencies>
+    <dependency>
+      <artifactId>spring-boot-starter-web</artifactId>
+      <groupId>org.springframework.boot</groupId>
+    </dependency>
+    <dependency>
+      <artifactId>spring-cloud-starter-openfeign</artifactId>
+      <groupId>org.springframework.cloud</groupId>
+    </dependency>
+    <dependency>
+      <artifactId>spring-security-core</artifactId>
+      <groupId>org.springframework.security</groupId>
+    </dependency>
+  </dependencies>
 
-	<artifactId>common-exceptions</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
-	<name>common-exceptions</name>
-	<description>common-exceptions</description>
-	<properties>
-		<spring-cloud.version>2024.0.0</spring-cloud.version>
-	</properties>
-	<dependencyManagement>
-		<dependencies>
-			<dependency>
-				<groupId>org.springframework.cloud</groupId>
-				<artifactId>spring-cloud-dependencies</artifactId>
-				<version>${spring-cloud.version}</version>
-				<type>pom</type>
-				<scope>import</scope>
-			</dependency>
-		</dependencies>
-	</dependencyManagement>
-	<dependencies>
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-web</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework.cloud</groupId>
-			<artifactId>spring-cloud-starter-openfeign</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework.security</groupId>
-			<artifactId>spring-security-core</artifactId>
-		</dependency>
-	</dependencies>
+  <dependencyManagement>
+    <dependencies>
+      <dependency>
+        <artifactId>spring-cloud-dependencies</artifactId>
+        <groupId>org.springframework.cloud</groupId>
+        <scope>import</scope>
+        <type>pom</type>
+        <version>${spring-cloud.version}</version>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
+  <description>common-exceptions</description>
+  <modelVersion>4.0.0</modelVersion>
+  <name>common-exceptions</name>
+  <parent>
+    <artifactId>cloud-commerce</artifactId>
+    <groupId>com.bohdanzhuvak</groupId>
+    <relativePath>../pom.xml</relativePath>
+    <version>1.0.0</version>
+  </parent>
+  <properties>
+    <spring-cloud.version>2024.0.0</spring-cloud.version>
+  </properties>
+  <version>0.0.1-SNAPSHOT</version>
 </project>

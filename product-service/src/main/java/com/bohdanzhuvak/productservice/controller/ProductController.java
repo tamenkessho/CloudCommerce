@@ -5,6 +5,7 @@ import com.bohdanzhuvak.productservice.dto.ProductResponse;
 import com.bohdanzhuvak.productservice.service.ProductService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
+import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
@@ -23,13 +24,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Map;
-
 @RestController
 @RequestMapping("/api/products")
 @RequiredArgsConstructor
 @Slf4j
 public class ProductController {
+
   private final ProductService productService;
 
   @PostMapping
@@ -43,8 +43,8 @@ public class ProductController {
   @GetMapping
   @ResponseStatus(HttpStatus.OK)
   public PagedModel<EntityModel<ProductResponse>> getAllProducts(Pageable pageable,
-                                                         @RequestParam(required = false) Map<String, String> filterParams,
-                                                         PagedResourcesAssembler<ProductResponse> assembler) {
+      @RequestParam(required = false) Map<String, String> filterParams,
+      PagedResourcesAssembler<ProductResponse> assembler) {
     log.info("Get /api/products");
     return assembler.toModel(productService.getProducts(pageable, filterParams));
   }
@@ -60,7 +60,7 @@ public class ProductController {
   @SecurityRequirement(name = "Bearer Authentication")
   @ResponseStatus(HttpStatus.OK)
   public ProductResponse updateProduct(@PathVariable String id,
-                                       @RequestBody ProductRequest productRequest) {
+      @RequestBody ProductRequest productRequest) {
     log.info("Put /api/products/{}", id);
     return productService.updateProductById(id, productRequest);
   }

@@ -10,7 +10,8 @@ import org.springframework.context.annotation.Configuration;
 public class GatewayConfig {
 
   @Bean
-  public RouteLocator customRouteLocator(RouteLocatorBuilder builder, JwtAuthenticationFilter jwtAuthFilter) {
+  public RouteLocator customRouteLocator(RouteLocatorBuilder builder,
+      JwtAuthenticationFilter jwtAuthFilter) {
     return builder.routes()
         .route("cart-service", r -> r.path("/api/cart/**")
             .filters(f -> f.filter(jwtAuthFilter))

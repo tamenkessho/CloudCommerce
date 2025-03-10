@@ -7,19 +7,19 @@ import com.bohdanzhuvak.productservice.mapper.ProductMapper;
 import com.bohdanzhuvak.productservice.model.Product;
 import com.bohdanzhuvak.productservice.repository.CategoryRepository;
 import com.bohdanzhuvak.productservice.repository.ProductRepository;
+import java.util.Map;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.Map;
-import java.util.Optional;
-
 @Service
 @RequiredArgsConstructor
 @Slf4j
 public class ProductService {
+
   private final ProductRepository productRepository;
   private final CategoryRepository categoryRepository;
   private final ProductMapper productMapper;
@@ -29,7 +29,8 @@ public class ProductService {
         .flatMap(request -> categoryRepository.findById(request.categoryId())
             .map(category -> productMapper.toProduct(request, category)))
         .map(productRepository::save)
-        .orElseThrow(() -> new ResourceNotFoundException("Category " + productRequest.categoryId() + " not found"));
+        .orElseThrow(() -> new ResourceNotFoundException(
+            "Category " + productRequest.categoryId() + " not found"));
 
     log.info("Product {} is saved", product.getId());
 
@@ -38,7 +39,8 @@ public class ProductService {
 
   public ProductResponse getProductById(String productId) {
     Product product = productRepository.findById(productId)
-        .orElseThrow(() -> new ResourceNotFoundException("Product with id " + productId + " not found"));
+        .orElseThrow(
+            () -> new ResourceNotFoundException("Product with id " + productId + " not found"));
 
     log.info("Product {} is found", productId);
 
@@ -48,7 +50,8 @@ public class ProductService {
   public Page<ProductResponse> getProducts(Pageable pageable, Map<String, String> filterParams) {
     Page<Product> products = productRepository.findProductsByFilters(filterParams, pageable);
 
-    log.info("List of {} products filtered by {} is found", products.getTotalElements(), filterParams);
+    log.info("List of {} products filtered by {} is found", products.getTotalElements(),
+        filterParams);
 
     return products.map(productMapper::toProductResponse);
   }
@@ -68,7 +71,9 @@ public class ProductService {
     productRepository.findById(productId)
         .ifPresentOrElse(
             product -> productRepository.deleteById(productId),
-            () -> { throw new ResourceNotFoundException("Product with id " + productId + " not found"); }
+            () -> {
+              throw new ResourceNotFoundException("Product with id " + productId + " not found");
+            }
         );
 
     log.info("Product {} is deleted", productId);

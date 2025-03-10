@@ -10,7 +10,9 @@ import org.springframework.stereotype.Component;
 @Component
 @RequiredArgsConstructor
 public class DatabaseUserProvider implements UserProvider {
+
   private final UserDetailsService userDetailsService;
+
   @Override
   public UserDetails loadUser(UserHeaderContext userHeaderContext) {
     return userDetailsService.loadUserByUsername(userHeaderContext.userId());

@@ -1,15 +1,16 @@
 package com.bohdanzhuvak.productservice.filter;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import com.bohdanzhuvak.productservice.filter.impl.CategoryFilter;
 import com.bohdanzhuvak.productservice.filter.impl.MaxPriceFilter;
 import com.bohdanzhuvak.productservice.filter.impl.MinPriceFilter;
+import java.util.Optional;
+import java.util.stream.Stream;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.data.mongodb.core.query.Criteria;
-import java.util.Optional;
-import java.util.stream.Stream;
-import static org.assertj.core.api.Assertions.assertThat;
 
 class PriceAndCategoryFiltersTest {
 
@@ -18,6 +19,30 @@ class PriceAndCategoryFiltersTest {
         Arguments.of(new MaxPriceFilter(), "maxPrice", "price"),
         Arguments.of(new MinPriceFilter(), "minPrice", "price"),
         Arguments.of(new CategoryFilter(), "category", "category")
+    );
+  }
+
+  static Stream<Arguments> priceFiltersProvider() {
+    return Stream.of(
+        Arguments.of(new MaxPriceFilter(), "maxPrice"),
+        Arguments.of(new MinPriceFilter(), "minPrice")
+    );
+  }
+
+  private static Stream<Arguments> categoryValues() {
+    return Stream.of(
+        Arguments.of("Electronics", true),
+        Arguments.of("  electronics  ", true),
+        Arguments.of("", false),
+        Arguments.of(null, false),
+        Arguments.of("123", true)
+    );
+  }
+
+  private static Stream<Arguments> boundaryPriceValues() {
+    return Stream.of(
+        Arguments.of(new MaxPriceFilter(), "maxPrice", "0", true),
+        Arguments.of(new MinPriceFilter(), "minPrice", "999999.99", true)
     );
   }
 
@@ -52,13 +77,6 @@ class PriceAndCategoryFiltersTest {
 
     // Assert
     assertThat(result).isEmpty();
-  }
-
-  static Stream<Arguments> priceFiltersProvider() {
-    return Stream.of(
-        Arguments.of(new MaxPriceFilter(), "maxPrice"),
-        Arguments.of(new MinPriceFilter(), "minPrice")
-    );
   }
 
   @ParameterizedTest
@@ -97,16 +115,6 @@ class PriceAndCategoryFiltersTest {
     assertThat(result.isPresent()).isEqualTo(expected);
   }
 
-  private static Stream<Arguments> categoryValues() {
-    return Stream.of(
-        Arguments.of("Electronics", true),
-        Arguments.of("  electronics  ", true),
-        Arguments.of("", false),
-        Arguments.of(null, false),
-        Arguments.of("123", true)
-    );
-  }
-
   @ParameterizedTest
   @MethodSource("boundaryPriceValues")
   void priceFiltersShouldHandleBoundaryValues(
@@ -117,12 +125,5 @@ class PriceAndCategoryFiltersTest {
 
     // Assert
     assertThat(result.isPresent()).isEqualTo(expected);
-  }
-
-  private static Stream<Arguments> boundaryPriceValues() {
-    return Stream.of(
-        Arguments.of(new MaxPriceFilter(), "maxPrice", "0", true),
-        Arguments.of(new MinPriceFilter(), "minPrice", "999999.99", true)
-    );
   }
 }

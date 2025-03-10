@@ -29,6 +29,7 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 @Slf4j
 public class AuthService {
+
   private final UserRepository userRepository;
   private final PasswordEncoder passwordEncoder;
   private final JwtTokenProvider tokenProvider;
@@ -57,7 +58,8 @@ public class AuthService {
 
   public TokenResponse login(LoginRequest request, HttpServletResponse response) {
     User user = userRepository.findByEmail(request.email())
-        .orElseThrow(() -> new ResourceNotFoundException("User with email " + request.email() + " not found"));
+        .orElseThrow(() -> new ResourceNotFoundException(
+            "User with email " + request.email() + " not found"));
 
     if (!passwordEncoder.matches(request.password(), user.getPasswordHash())) {
       throw new InvalidCredentialsException();
@@ -68,7 +70,8 @@ public class AuthService {
     return tokenProvider.generateAccessToken(user);
   }
 
-  public TokenResponse refreshAccessToken(HttpServletRequest request, HttpServletResponse response) {
+  public TokenResponse refreshAccessToken(HttpServletRequest request,
+      HttpServletResponse response) {
     String refreshToken = cookieUtil.extractRefreshTokenFromCookie(request);
 
     if (refreshToken == null || !tokenProvider.validateToken(refreshToken)) {

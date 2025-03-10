@@ -1,61 +1,61 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
-    <modelVersion>4.0.0</modelVersion>
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns="http://maven.apache.org/POM/4.0.0"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <artifactId>cloud-commerce</artifactId>
 
-    <parent>
-        <groupId>org.springframework.boot</groupId>
-        <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.4.2</version>
-        <relativePath/>
-    </parent>
+  <dependencies>
+    <dependency>
+      <artifactId>lombok</artifactId>
+      <groupId>org.projectlombok</groupId>
+    </dependency>
+  </dependencies>
 
-    <groupId>com.bohdanzhuvak</groupId>
-    <artifactId>cloud-commerce</artifactId>
-    <version>1.0.0</version>
-    <packaging>pom</packaging>
-
-    <modules>
-        <module>common-exceptions</module>
-        <module>common-security</module>
-        <module>api-gateway</module>
-        <module>user-service</module>
-        <module>order-service</module>
-        <module>product-service</module>
-        <module>cart-service</module>
-        <module>common-documentation</module>
-    </modules>
-
-    <properties>
-        <java.version>21</java.version>
-        <spring-cloud.version>2024.0.0</spring-cloud.version>
-    </properties>
-
+  <dependencyManagement>
     <dependencies>
-        <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-        </dependency>
+      <dependency>
+        <artifactId>spring-boot-starter-web</artifactId>
+        <groupId>org.springframework.boot</groupId>
+        <version>3.4.2</version>
+      </dependency>
+      <dependency>
+        <artifactId>spring-cloud-dependencies</artifactId>
+        <groupId>org.springframework.cloud</groupId>
+        <scope>import</scope>
+        <type>pom</type>
+        <version>${spring-cloud.version}</version>
+      </dependency>
     </dependencies>
+  </dependencyManagement>
+  <groupId>com.bohdanzhuvak</groupId>
+  <modelVersion>4.0.0</modelVersion>
+  <modules>
+    <module>common-exceptions</module>
+    <module>common-security</module>
+    <module>api-gateway</module>
+    <module>user-service</module>
+    <module>order-service</module>
+    <module>product-service</module>
+    <module>cart-service</module>
+    <module>common-documentation</module>
+  </modules>
+
+  <packaging>pom</packaging>
+
+  <parent>
+    <artifactId>spring-boot-starter-parent</artifactId>
+    <groupId>org.springframework.boot</groupId>
+    <relativePath/>
+    <version>3.4.2</version>
+  </parent>
+
+  <properties>
+    <java.version>21</java.version>
+    <spring-cloud.version>2024.0.0</spring-cloud.version>
+  </properties>
 
 
-    <dependencyManagement>
-        <dependencies>
-            <dependency>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-starter-web</artifactId>
-                <version>3.4.2</version>
-            </dependency>
-            <dependency>
-                <groupId>org.springframework.cloud</groupId>
-                <artifactId>spring-cloud-dependencies</artifactId>
-                <version>${spring-cloud.version}</version>
-                <type>pom</type>
-                <scope>import</scope>
-            </dependency>
-        </dependencies>
-    </dependencyManagement>
-
+  <version>1.0.0</version>
 
 
 </project>

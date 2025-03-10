@@ -13,6 +13,7 @@ import org.mapstruct.NullValuePropertyMappingStrategy;
 
 @Mapper(componentModel = "spring")
 public interface ProductMapper {
+
   ProductResponse toProductResponse(Product product);
 
   @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE,
@@ -23,7 +24,7 @@ public interface ProductMapper {
   void applyRequestToProduct(ProductRequest productRequest, @MappingTarget Product existingProduct);
 
 
-  default Product copyRequestToProduct(ProductRequest productRequest, Product product){
+  default Product copyRequestToProduct(ProductRequest productRequest, Product product) {
     Product copy = product.toBuilder().build();
     applyRequestToProduct(productRequest, copy);
     return copy;

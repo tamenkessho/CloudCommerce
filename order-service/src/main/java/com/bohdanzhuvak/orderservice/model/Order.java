@@ -12,6 +12,7 @@ import org.springframework.data.annotation.LastModifiedDate;
 @Data
 @Builder
 public class Order {
+
   @Id
   private String id;
   private String userId;

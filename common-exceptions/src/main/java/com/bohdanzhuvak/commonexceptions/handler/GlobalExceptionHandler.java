@@ -10,6 +10,8 @@ import com.bohdanzhuvak.commonexceptions.exception.impl.UserAlreadyExistsExcepti
 import com.bohdanzhuvak.commonexceptions.model.ApiError;
 import com.bohdanzhuvak.commonexceptions.model.ValidationDetail;
 import feign.FeignException;
+import java.time.Instant;
+import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,12 +23,10 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.ServletWebRequest;
 import org.springframework.web.context.request.WebRequest;
 
-import java.time.Instant;
-import java.util.List;
-
 @RestControllerAdvice
 @Slf4j
 public class GlobalExceptionHandler {
+
   @ExceptionHandler(BaseException.class)
   public ResponseEntity<ApiError> handleBaseException(BaseException ex, WebRequest request) {
     ApiError error = buildApiError(ex, request);
@@ -35,7 +35,8 @@ public class GlobalExceptionHandler {
   }
 
   @ExceptionHandler(FeignException.ServiceUnavailable.class)
-  public ResponseEntity<ApiError> handleFeignServiceUnavailable(FeignException ex, WebRequest request) {
+  public ResponseEntity<ApiError> handleFeignServiceUnavailable(FeignException ex,
+      WebRequest request) {
     ServiceUnavailableException customEx = new ServiceUnavailableException(extractServiceName(ex));
     ApiError error = buildApiError(customEx, request);
     return ResponseEntity.status(error.status()).body(error);
@@ -48,14 +49,16 @@ public class GlobalExceptionHandler {
     return ResponseEntity.status(error.status()).body(error);
   }
 
-  @ExceptionHandler({InvalidTokenException.class, AuthorizationDeniedException.class, InvalidCredentialsException.class})
+  @ExceptionHandler({InvalidTokenException.class, AuthorizationDeniedException.class,
+      InvalidCredentialsException.class})
   public ResponseEntity<ApiError> handleAuthErrors(BaseException ex, WebRequest request) {
     ApiError error = buildApiError(ex, request);
     return ResponseEntity.status(error.status()).body(error);
   }
 
   @ExceptionHandler(UserAlreadyExistsException.class)
-  public ResponseEntity<ApiError> handleUserExists(UserAlreadyExistsException ex, WebRequest request) {
+  public ResponseEntity<ApiError> handleUserExists(UserAlreadyExistsException ex,
+      WebRequest request) {
     ApiError error = buildApiError(ex, request);
     return ResponseEntity.status(error.status()).body(error);
   }
@@ -127,14 +130,30 @@ public class GlobalExceptionHandler {
   }
 
   private HttpStatus resolveHttpStatus(Exception ex) {
-    if (ex instanceof ResourceNotFoundException) return HttpStatus.NOT_FOUND;
-    if (ex instanceof AccessDeniedException) return HttpStatus.FORBIDDEN;
-    if (ex instanceof InvalidTokenException) return HttpStatus.UNAUTHORIZED;
-    if (ex instanceof InvalidCredentialsException) return HttpStatus.UNAUTHORIZED;
-    if (ex instanceof UserAlreadyExistsException) return HttpStatus.CONFLICT;
-    if (ex instanceof ServiceUnavailableException) return HttpStatus.SERVICE_UNAVAILABLE;
-    if (ex instanceof MethodArgumentNotValidException) return HttpStatus.BAD_REQUEST;
-    if (ex instanceof InvalidOrderStateException) return HttpStatus.CONFLICT;
+    if (ex instanceof ResourceNotFoundException) {
+      return HttpStatus.NOT_FOUND;
+    }
+    if (ex instanceof AccessDeniedException) {
+      return HttpStatus.FORBIDDEN;
+    }
+    if (ex instanceof InvalidTokenException) {
+      return HttpStatus.UNAUTHORIZED;
+    }
+    if (ex instanceof InvalidCredentialsException) {
+      return HttpStatus.UNAUTHORIZED;
+    }
+    if (ex instanceof UserAlreadyExistsException) {
+      return HttpStatus.CONFLICT;
+    }
+    if (ex instanceof ServiceUnavailableException) {
+      return HttpStatus.SERVICE_UNAVAILABLE;
+    }
+    if (ex instanceof MethodArgumentNotValidException) {
+      return HttpStatus.BAD_REQUEST;
+    }
+    if (ex instanceof InvalidOrderStateException) {
+      return HttpStatus.CONFLICT;
+    }
     return HttpStatus.INTERNAL_SERVER_ERROR;
   }
 }

@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 @Slf4j
 public class UserService {
+
   private final UserRepository userRepository;
   private final UserMapper userMapper;
 
@@ -23,14 +24,17 @@ public class UserService {
   }
 
   public List<UserResponse> getAllUsers() {
-    return userRepository.findAll().stream().map(userMapper::toResponse).collect(Collectors.toList());
+    return userRepository.findAll().stream().map(userMapper::toResponse)
+        .collect(Collectors.toList());
   }
 
   public void deleteUserById(String id) {
     userRepository.findById(id)
         .ifPresentOrElse(
             userRepository::delete,
-            () -> {throw new ResourceNotFoundException("User with id " + id + " not found");}
+            () -> {
+              throw new ResourceNotFoundException("User with id " + id + " not found");
+            }
         );
   }
 }

@@ -15,7 +15,9 @@ import reactor.core.publisher.Mono;
 @Component
 @RequiredArgsConstructor
 public class JwtAuthenticationFilter implements GatewayFilter {
+
   private final JwtTokenProvider jwtTokenProvider;
+
   @Override
   public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
     String jwt = getJwtFromRequest(exchange.getRequest());
@@ -39,8 +41,8 @@ public class JwtAuthenticationFilter implements GatewayFilter {
 
   private String getJwtFromRequest(ServerHttpRequest request) {
     String bearerToken = request.getHeaders().getFirst(HttpHeaders.AUTHORIZATION);
-    return StringUtils.hasText(bearerToken) && bearerToken.startsWith("Bearer ") ?
-        bearerToken.substring(7) :
-        null;
+    return StringUtils.hasText(bearerToken) && bearerToken.startsWith("Bearer ")
+        ? bearerToken.substring(7)
+        : null;
   }
 }

@@ -1,16 +1,16 @@
 package com.bohdanzhuvak.productservice.filter.impl;
 
 import com.bohdanzhuvak.productservice.filter.CriteriaFilter;
+import java.math.BigDecimal;
+import java.util.Optional;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.stereotype.Component;
 
-import java.math.BigDecimal;
-import java.util.Optional;
-
 @Component
 public class MinPriceFilter implements CriteriaFilter {
-  private final String FILTER_KEY = "minPrice";
-  private final String FIELD_NAME = "price";
+
+  private static final String FILTER_KEY = "minPrice";
+  private static final String FIELD_NAME = "price";
 
   @Override
   public Optional<Criteria> createCriteria(String key, String value) {

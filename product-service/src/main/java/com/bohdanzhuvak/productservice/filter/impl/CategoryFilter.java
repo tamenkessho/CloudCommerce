@@ -1,15 +1,15 @@
 package com.bohdanzhuvak.productservice.filter.impl;
 
 import com.bohdanzhuvak.productservice.filter.CriteriaFilter;
+import java.util.Optional;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.stereotype.Component;
 
-import java.util.Optional;
-
 @Component
 public class CategoryFilter implements CriteriaFilter {
-  private final String FILTER_KEY = "category";
-  private final String FIELD_NAME = "category.name";
+
+  private static final String FILTER_KEY = "category";
+  private static final String FIELD_NAME = "category.name";
 
   @Override
   public Optional<Criteria> createCriteria(String key, String value) {

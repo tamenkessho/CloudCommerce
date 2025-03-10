@@ -25,6 +25,7 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 @Slf4j
 public class OrderService {
+
   private final OrderRepository orderRepository;
   private final ProductClient productClient;
   private final SecurityUtils securityUtils;
@@ -34,32 +35,33 @@ public class OrderService {
   @PreAuthorize("hasRole('USER')")
   public OrderResponse createOrder(OrderRequest request) {
     List<OrderItem> orderItems = request.items().stream()
-            .map(item -> {
-              try {
-                ProductResponse product = productClient.getProductById(item.productId());
-                return OrderItem.builder()
-                        .productId(product.id())
-                        .productName(product.name())
-                        .pricePerUnit(product.price())
-                        .quantity(item.quantity())
-                        .build();
-              } catch (FeignException.NotFound ex) {
-                throw new ResourceNotFoundException("Product with id " + item.productId() + " not found");
-              }
-            }).toList();
+        .map(item -> {
+          try {
+            ProductResponse product = productClient.getProductById(item.productId());
+            return OrderItem.builder()
+                .productId(product.id())
+                .productName(product.name())
+                .pricePerUnit(product.price())
+                .quantity(item.quantity())
+                .build();
+          } catch (FeignException.NotFound ex) {
+            throw new ResourceNotFoundException(
+                "Product with id " + item.productId() + " not found");
+          }
+        }).toList();
 
     BigDecimal totalPrice = orderItems.stream()
-            .map(item -> item.getPricePerUnit().multiply(BigDecimal.valueOf(item.getQuantity())))
-            .reduce(BigDecimal.ZERO, BigDecimal::add);
+        .map(item -> item.getPricePerUnit().multiply(BigDecimal.valueOf(item.getQuantity())))
+        .reduce(BigDecimal.ZERO, BigDecimal::add);
 
     String userId = securityUtils.getCurrentUserId();
 
     Order order = Order.builder()
-            .userId(userId)
-            .status(OrderStatus.CREATED)
-            .totalPrice(totalPrice)
-            .items(orderItems)
-            .build();
+        .userId(userId)
+        .status(OrderStatus.CREATED)
+        .totalPrice(totalPrice)
+        .items(orderItems)
+        .build();
 
     order = orderRepository.save(order);
     log.info("Created order with id: {}", order.getId());
@@ -69,7 +71,7 @@ public class OrderService {
   @PreAuthorize("hasRole('USER')")
   public OrderResponse getOrderById(String id) {
     Order order = orderRepository.findById(id)
-            .orElseThrow(() -> new ResourceNotFoundException("Order with id: " + id + " not found"));
+        .orElseThrow(() -> new ResourceNotFoundException("Order with id: " + id + " not found"));
 
     securityUtils.checkAccessToUserData(order.getUserId());
 
@@ -82,15 +84,15 @@ public class OrderService {
     List<Order> orders = orderRepository.findByUserId(userId);
     log.info("Retrieved {} orders", orders.size());
     return orders.stream()
-            .map(orderMapper::toResponse)
-            .toList();
+        .map(orderMapper::toResponse)
+        .toList();
   }
 
   @Transactional
   @PreAuthorize("hasRole('USER')")
   public OrderResponse cancelOrder(String id) {
     Order order = orderRepository.findById(id)
-            .orElseThrow(() -> new ResourceNotFoundException("Order with id: " + id + " not found"));
+        .orElseThrow(() -> new ResourceNotFoundException("Order with id: " + id + " not found"));
 
     securityUtils.checkAccessToUserData(order.getUserId());
 

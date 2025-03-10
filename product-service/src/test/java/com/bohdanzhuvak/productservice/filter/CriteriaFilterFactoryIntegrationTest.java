@@ -1,15 +1,15 @@
 package com.bohdanzhuvak.productservice.filter;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import com.bohdanzhuvak.productservice.filter.factory.CriteriaFilterFactory;
+import java.math.BigDecimal;
+import java.util.List;
+import java.util.Map;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.mongodb.core.query.Criteria;
-
-import java.math.BigDecimal;
-import java.util.List;
-import java.util.Map;
-import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
 class CriteriaFilterFactoryIntegrationTest {

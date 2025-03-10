@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 @SecurityRequirement(name = "Bearer Authentication")
 @RequiredArgsConstructor
 public class CartController {
+
   private final CartService cartService;
   private final SecurityUtils securityUtils;
 

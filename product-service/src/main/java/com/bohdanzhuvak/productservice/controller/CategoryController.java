@@ -4,6 +4,7 @@ import com.bohdanzhuvak.productservice.dto.CategoryRequest;
 import com.bohdanzhuvak.productservice.dto.CategoryResponse;
 import com.bohdanzhuvak.productservice.service.CategoryService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -17,13 +18,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
-
 @RestController
 @RequestMapping("/api/categories")
 @RequiredArgsConstructor
 @Slf4j
 public class CategoryController {
+
   private final CategoryService categoryService;
 
   @PostMapping
@@ -43,7 +43,7 @@ public class CategoryController {
 
   @GetMapping("/{id}")
   @ResponseStatus(HttpStatus.OK)
-  public CategoryResponse getCategory(@PathVariable String id){
+  public CategoryResponse getCategory(@PathVariable String id) {
     log.info("Get /api/categories/{}", id);
     return categoryService.getCategory(id);
   }
@@ -52,7 +52,7 @@ public class CategoryController {
   @SecurityRequirement(name = "Bearer Authentication")
   @ResponseStatus(HttpStatus.OK)
   public CategoryResponse updateCategory(@PathVariable String id,
-                                         @RequestBody CategoryRequest categoryRequest) {
+      @RequestBody CategoryRequest categoryRequest) {
     log.info("Put /api/categories/{}: {}", id, categoryRequest);
     return categoryService.updateCategory(id, categoryRequest);
   }

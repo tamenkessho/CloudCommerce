@@ -10,4 +10,6 @@ public record ApiError(
     String path,
     String code,
     List<ValidationDetail> details
-) {}
+) {
+
+}

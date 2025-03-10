@@ -1,5 +1,7 @@
 package com.bohdanzhuvak.commonsecurity.config;
 
+import static org.springframework.security.config.http.SessionCreationPolicy.STATELESS;
+
 import com.bohdanzhuvak.commonsecurity.filter.HeaderAuthenticationFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -13,14 +15,22 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-import static org.springframework.security.config.http.SessionCreationPolicy.STATELESS;
-
 @Configuration
 @EnableMethodSecurity
 @EnableWebSecurity
 @RequiredArgsConstructor
 public class DefaultSecurityConfig {
+
   private final HeaderAuthenticationFilter headerAuthenticationFilter;
+
+  @Bean
+  static RoleHierarchy roleHierarchy() {
+    return RoleHierarchyImpl.withDefaultRolePrefix()
+        .role("ADMIN").implies("MODERATOR")
+        .role("MODERATOR").implies("USER")
+        .build();
+  }
+
   @Bean
   public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
     return http
@@ -30,14 +40,6 @@ public class DefaultSecurityConfig {
         )
         .sessionManagement(session -> session.sessionCreationPolicy(STATELESS))
         .addFilterBefore(headerAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
-        .build();
-  }
-
-  @Bean
-  static RoleHierarchy roleHierarchy() {
-    return RoleHierarchyImpl.withDefaultRolePrefix()
-        .role("ADMIN").implies("MODERATOR")
-        .role("MODERATOR").implies("USER")
         .build();
   }
 }

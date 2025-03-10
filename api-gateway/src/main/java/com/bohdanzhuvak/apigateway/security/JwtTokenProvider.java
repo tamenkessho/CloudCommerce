@@ -4,15 +4,15 @@ import com.bohdanzhuvak.apigateway.config.JwtProperties;
 import com.bohdanzhuvak.apigateway.dto.UserDTO;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Component;
-
 import java.util.Date;
 import java.util.function.Function;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
 public class JwtTokenProvider {
+
   private final JwtProperties jwtProperties;
 
   public boolean validateToken(String token) {

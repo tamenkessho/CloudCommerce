@@ -4,14 +4,14 @@ import com.bohdanzhuvak.userservice.config.JwtProperties;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import java.util.Arrays;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
-
-import java.util.Arrays;
 
 @Component
 @RequiredArgsConstructor
 public class JwtCookieUtil {
+
   private final JwtProperties jwtProperties;
 
   public void addRefreshTokenCookie(HttpServletResponse response, String refreshToken) {
@@ -24,7 +24,9 @@ public class JwtCookieUtil {
   }
 
   public String extractRefreshTokenFromCookie(HttpServletRequest request) {
-    if (request.getCookies() == null) return null;
+    if (request.getCookies() == null) {
+      return null;
+    }
     return Arrays.stream(request.getCookies())
         .filter(cookie -> "refreshToken".equals(cookie.getName()))
         .findFirst()
